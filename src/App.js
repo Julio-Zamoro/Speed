@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Container, Grid, Paper, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, useTheme } from '@mui/material';
+import { Container, Grid, Paper, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import ApiDetails from './ApiDetails';
-import './index.css';
 import axios from 'axios';
+import { ErrorSharp } from '@mui/icons-material';
 
+// Lista de URLs das APIs
 const apiUrls = [
     'https://jsonplaceholder.typicode.com/posts',
     'https://jsonplaceholder.typicode.com/comments',
@@ -15,6 +16,20 @@ const apiUrls = [
     'https://api.coingecko.com/api/v3/ping',
     'https://api.github.com/users/github',
     'https://dog.ceo/api/breeds/image/random'
+];
+
+// Lista de nomes para cada API
+const apiNames = [
+    'Banco do Brasil',
+    'Itaú',
+    'Itaú Francesa',
+    'Sicoob',
+    'Sicredi - v2',
+    'Sicredi - v3',
+    'Caixa',
+    'Santander',
+    'Banrisul',
+    'Inter'
 ];
 
 function App() {
@@ -49,96 +64,96 @@ function App() {
             <Grid container spacing={3} justifyContent="center">
                 {apiUrls.map((url, index) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-<Paper
-    sx={{
-        display: 'flex',
-        flexDirection: 'column', // Empilha os elementos verticalmente
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '20px',
-        height: '250px', // Aumenta a altura para comportar os botões
-        backgroundColor: '#1d1d1d',
-        borderRadius: '10px',
-        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.5)',
-        '&:hover': {
-            transform: 'translateY(-5px)',
-            boxShadow: '0 6px 15px rgba(0, 0, 0, 0.7)',
-        },
-    }}
->
-    <Typography
-        variant="h6"
-        sx={{
-            fontSize: '1.2rem',
-            fontWeight: 'bold',
-            color: '#4caf50',
-            marginBottom: '10px',
-            textAlign: 'center',
-        }}
-    >
-        Bradescoll 
-    </Typography>
+                        <Paper
+                            sx={{
+                                display: 'flex',
+                                flexDirection: 'column', // Empilha os elementos verticalmente
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                padding: '20px',
+                                height: '250px', // Aumenta a altura para comportar os botões
+                                backgroundColor: '#1d1d1d',
+                                borderRadius: '10px',
+                                boxShadow: '0 4px 10px rgba(0, 0, 0, 0.5)',
+                                '&:hover': {
+                                    transform: 'translateY(-5px)',
+                                    boxShadow: '0 6px 15px rgba(0, 0, 0, 0.7)',
+                                },
+                            }}
+                        >
+                            {/* Exibe o nome da API com base na lista de nomes */}
+                            <Typography
+                                variant="h6"
+                                sx={{
+                                    fontSize: '1.2rem',
+                                    fontWeight: 'bold',
+                                    color: '#4caf50',
+                                    marginBottom: '10px',
+                                    textAlign: 'center',
+                                }}
+                            >
+                                {apiNames[index]} {/* Exibe o nome correspondente ao índice */}
+                            </Typography>
 
-    {/* Contêiner dos botões */}
-    <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column',  gap: '10px', width: '100%', justifyContent: 'center',}}>
-        {/* Botão Monitorar */}
-        <Button
-            variant="contained"
-            color="primary"
-            onClick={() => handleMonitorClick(url)}
-            sx={{
-                backgroundColor: '#757575',
-                color: 'white',
-                fontWeight: 'bold',
-                borderRadius: '20px',
-                margin: '1px',
-                padding: '10px 60px',
-                '&:hover': {
-                    backgroundColor: '#616161',
-                },
-            }}
-        >
-            Gráfico
-        </Button>
+                            {/* Contêiner dos botões */}
+                            <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', justifyContent: 'center' }}>
+                                {/* Botão Monitorar */}
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => handleMonitorClick(url)}
+                                    sx={{
+                                        backgroundColor: '#757575',
+                                        color: 'white',
+                                        fontWeight: 'bold',
+                                        borderRadius: '20px',
+                                        margin: '1px',
+                                        padding: '10px 60px',
+                                        '&:hover': {
+                                            backgroundColor: '#616161',
+                                        },
+                                    }}
+                                >
+                                    Gráfico
+                                </Button>
 
-        {/* Botão Cinza 1 */}
-        <Button
-            variant="contained"
-            sx={{
-                backgroundColor: '#757575',
-                color: 'white',
-                fontWeight: 'bold',
-                borderRadius: '20px',
-                margin: '1px',
-                padding: '10px 30px',
-                '&:hover': {
-                    backgroundColor: '#616161',
-                },
-            }}
-        >
-            Tabela de erros
-        </Button>
+                                {/* Botão de Logs*/}
+                                <Button
+                                    variant="contained"
+                                        sx={{
+                                            backgroundColor: '#757575',
+                                            color: 'white',
+                                            fontWeight: 'bold',
+                                            borderRadius: '20px',
+                                            margin: '1px',
+                                            padding: '10px 30px',
+                                            '&:hover': {
+                                            backgroundColor: '#616161',
+                                        },
+                                    }}
+                                >
+                                    Tabela de erros
+                                </Button>
 
-        {/* Botão Cinza 2 */}
-        <Button
-            variant="contained"
-            sx={{
-                backgroundColor: '#4caf50',
-                color: 'white',
-                fontWeight: 'bold',
-                borderRadius: '20px',
-                margin: '1px',
-                padding: '10px 50px',
-                '&:hover': {
-                    backgroundColor: '#388e3c',
-                },
-            }}
-        >
-            Conectado
-        </Button>
-    </div>
-</Paper>
-
+                                {/* COnectado ? */}
+                                <Button
+                                    variant="contained"
+                                    sx={{
+                                        backgroundColor: '#4caf50',
+                                        color: 'white',
+                                        fontWeight: 'bold',
+                                        borderRadius: '20px',
+                                        margin: '1px',
+                                        padding: '10px 50px',
+                                        '&:hover': {
+                                            backgroundColor: '#388e3c',
+                                        },
+                                    }}
+                                >
+                                    Conectado
+                                </Button>
+                            </div>
+                        </Paper>
                     </Grid>
                 ))}
             </Grid>
@@ -172,9 +187,9 @@ function App() {
                             <TableBody>
                                 {errors.map((error, index) => (
                                     <TableRow key={index}>
-                                        <TableCell sx={{ color: '#e0e0e0' }}>{error.rota}</TableCell> {/* Cor das letras das células */}
-                                        <TableCell sx={{ color: '#e0e0e0' }}>{error.status}</TableCell> {/* Cor das letras das células */}
-                                        <TableCell sx={{ color: '#e0e0e0' }}>{error.created_at}</TableCell> {/* Cor das letras das células */}
+                                        <TableCell sx={{ color: '#e0e0e0' }}>{error.rota}</TableCell>
+                                        <TableCell sx={{ color: '#e0e0e0' }}>{error.status}</TableCell>
+                                        <TableCell sx={{ color: '#e0e0e0' }}>{error.created_at}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
