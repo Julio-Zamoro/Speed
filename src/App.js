@@ -4,6 +4,16 @@ import ApiDetails from './ApiDetails';
 import axios from 'axios';
 import { ErrorSharp } from '@mui/icons-material';
 
+//Lista de Logos
+    import LogoBB from './Logos/LogoBB 1.png';
+    import LogoItau from './Logos/LogoItau 2.png';
+    import LogoSicoob from './Logos/LogoSicoob 1.png';
+    import LogoSicredi from './Logos/LogoSicredi 1.png';
+    import LogoCaixa from './Logos/LogoCaixa 1.png';
+    import LogoSantander from './Logos/LogoSantander 1.png';
+    import LogoBanrisul from './Logos/LogoBanrisul 1.png';
+    import LogoInter from './Logos/LogoInter 1.png';
+
 // Lista de URLs das APIs
 const apiUrls = [
     'https://jsonplaceholder.typicode.com/posts',
@@ -31,7 +41,10 @@ const apiNames = [
     'Banrisul',
     'Inter'
 ];
+    //importei a constante da Logo
+    const apiLogos = [LogoBB,LogoItau,LogoItau,LogoSicoob,LogoSicredi,LogoSicredi,LogoCaixa,LogoSantander,LogoBanrisul,LogoInter];
 
+   
 function App() {
     const [selectedApi, setSelectedApi] = useState(null);
     const [errors, setErrors] = useState([]);
@@ -81,19 +94,21 @@ function App() {
                                 },
                             }}
                         >
-                            {/* Exibe o nome da API com base na lista de nomes */}
-                            <Typography
-                                variant="h6"
-                                sx={{
-                                    fontSize: '1.2rem',
-                                    fontWeight: 'bold',
-                                    color: '#4caf50',
-                                    marginBottom: '10px',
-                                    textAlign: 'center',
-                                }}
-                            >
-                                {apiNames[index]} {/* Exibe o nome correspondente ao índice */}
-                            </Typography>
+                            {/* Exibe o nome da API com a logo ao lado */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                                <img src={apiLogos[index]} alt={`${apiNames[index]} logo`} style={{ width: '30px', height: '30px' }} />
+                                <Typography
+                                    variant="h6"
+                                    sx={{
+                                        fontSize: '1.2rem',
+                                        fontWeight: 'bold',
+                                        color: '#4caf50',
+                                        textAlign: 'center',
+                                    }}
+                                >
+                                    {apiNames[index]}
+                                </Typography>
+                            </div>
 
                             {/* Contêiner dos botões */}
                             <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', justifyContent: 'center' }}>
