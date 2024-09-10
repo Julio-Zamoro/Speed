@@ -1,18 +1,29 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Container, Grid, Paper, Typography, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import {
+    Container,
+    Grid,
+    Paper,
+    Typography,
+    Button,
+    Table,
+    TableBody,
+    TableCell,
+    TableContainer,
+    TableHead,
+    TableRow
+} from '@mui/material';
 import ApiDetails from './ApiDetails';
 import axios from 'axios';
-import { ErrorSharp } from '@mui/icons-material';
 
-//Lista de Logos
-    import LogoBB from './Logos/LogoBB 1.png';
-    import LogoItau from './Logos/LogoItau 2.png';
-    import LogoSicoob from './Logos/LogoSicoob 1.png';
-    import LogoSicredi from './Logos/LogoSicredi 1.png';
-    import LogoCaixa from './Logos/LogoCaixa 1.png';
-    import LogoSantander from './Logos/LogoSantander 1.png';
-    import LogoBanrisul from './Logos/LogoBanrisul 1.png';
-    import LogoInter from './Logos/LogoInter 1.png';
+// Lista de Logos
+import LogoBB from './Logos/LogoBB 1.png';
+import LogoItau from './Logos/LogoItau 2.png';
+import LogoSicoob from './Logos/LogoSicoob 1.png';
+import LogoSicredi from './Logos/LogoSicredi 1.png';
+import LogoCaixa from './Logos/LogoCaixa 1.png';
+import LogoSantander from './Logos/LogoSantander 1.png';
+import LogoBanrisul from './Logos/LogoBanrisul 1.png';
+import LogoInter from './Logos/LogoInter 1.png';
 
 // Lista de URLs das APIs
 const apiUrls = [
@@ -41,14 +52,26 @@ const apiNames = [
     'Banrisul',
     'Inter'
 ];
-    //importei a constante da Logo
-    const apiLogos = [LogoBB,LogoItau,LogoItau,LogoSicoob,LogoSicredi,LogoSicredi,LogoCaixa,LogoSantander,LogoBanrisul,LogoInter];
 
-   
+// Lista de Logos
+const apiLogos = [
+    LogoBB,
+    LogoItau,
+    LogoItau, 
+    LogoSicoob,
+    LogoSicredi,
+    LogoSicredi, 
+    LogoCaixa,
+    LogoSantander,
+    LogoBanrisul,
+    LogoInter
+];
+
 function App() {
     const [selectedApi, setSelectedApi] = useState(null);
     const [errors, setErrors] = useState([]);
     const detailsRef = useRef(null);
+    const logsRef = useRef(null);
 
     useEffect(() => {
         const fetchErrors = async () => {
@@ -72,6 +95,10 @@ function App() {
         }, 100);
     };
 
+    const handleLogsClick = () => {
+        logsRef.current.scrollIntoView({ behavior: 'smooth' });
+    };
+
     return (
         <Container sx={{ padding: '20px', minHeight: '100vh', backgroundColor: '#121212' }}>
             <Grid container spacing={3} justifyContent="center">
@@ -80,11 +107,11 @@ function App() {
                         <Paper
                             sx={{
                                 display: 'flex',
-                                flexDirection: 'column', // Empilha os elementos verticalmente
+                                flexDirection: 'column',
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
                                 padding: '20px',
-                                height: '250px', // Aumenta a altura para comportar os botões
+                                height: '250px',
                                 backgroundColor: '#1d1d1d',
                                 borderRadius: '10px',
                                 boxShadow: '0 4px 10px rgba(0, 0, 0, 0.5)',
@@ -94,7 +121,6 @@ function App() {
                                 },
                             }}
                         >
-                            {/* Exibe o nome da API com a logo ao lado */}
                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
                                 <img src={apiLogos[index]} alt={`${apiNames[index]} logo`} style={{ width: '30px', height: '30px' }} />
                                 <Typography
@@ -109,10 +135,7 @@ function App() {
                                     {apiNames[index]}
                                 </Typography>
                             </div>
-
-                            {/* Contêiner dos botões */}
                             <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', justifyContent: 'center' }}>
-                                {/* Botão Monitorar */}
                                 <Button
                                     variant="contained"
                                     color="primary"
@@ -131,26 +154,23 @@ function App() {
                                 >
                                     Gráfico
                                 </Button>
-
-                                {/* Botão de Logs*/}
                                 <Button
                                     variant="contained"
-                                        sx={{
-                                            backgroundColor: '#757575',
-                                            color: 'white',
-                                            fontWeight: 'bold',
-                                            borderRadius: '20px',
-                                            margin: '1px',
-                                            padding: '10px 30px',
-                                            '&:hover': {
+                                    onClick={handleLogsClick}
+                                    sx={{
+                                        backgroundColor: '#757575',
+                                        color: 'white',
+                                        fontWeight: 'bold',
+                                        borderRadius: '20px',
+                                        margin: '1px',
+                                        padding: '10px 30px',
+                                        '&:hover': {
                                             backgroundColor: '#616161',
                                         },
                                     }}
                                 >
                                     Tabela de erros
                                 </Button>
-
-                                {/* COnectado ? */}
                                 <Button
                                     variant="contained"
                                     sx={{
@@ -178,15 +198,15 @@ function App() {
                 </div>
             )}
             {errors.length > 0 && (
-                <div style={{ marginTop: '40px' }}>
+                <div ref={logsRef} style={{ marginTop: '40px' }}>
                     <Typography variant="h6" sx={{ color: '#f44336', marginBottom: '20px' }}>
                         Erros de Conexão
                     </Typography>
                     <TableContainer
                         component={Paper}
                         sx={{
-                            backgroundColor: '#1d1d1d', // Fundo escuro para a tabela
-                            color: '#ffffff', // Texto branco geral
+                            backgroundColor: '#1d1d1d',
+                            color: '#ffffff',
                             borderRadius: '10px',
                             boxShadow: '0 4px 10px rgba(0, 0, 0, 0.5)',
                         }}
