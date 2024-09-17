@@ -4,6 +4,7 @@ const sqlite3 = require('sqlite3').verbose();
 const { format } = require('date-fns');
 const db = new sqlite3.Database('./honesto.sqlite3');
 
+
 const apiUrls = [
     'https://jsonplaceholder.typicode.com/posts',
     'https://jsonplaceholder.typicode.com/comments',

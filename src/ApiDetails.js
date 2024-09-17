@@ -31,7 +31,7 @@ const darkTheme = createTheme({
     },
 });
 
-function ApiDetails({ apiUrl }) {
+function ApiDetails({ apiUrl, apiName }) {  // Adicionado apiName como prop
     const [logs, setLogs] = useState([]);
 
     useEffect(() => {
@@ -79,7 +79,7 @@ function ApiDetails({ apiUrl }) {
             <CssBaseline />
             <Container sx={{ padding: '20px', backgroundColor: '#1d1d1d', minHeight: '50vh' }}>
                 <Typography variant="h4" gutterBottom>
-                    Logs da API: {decodeURIComponent(apiUrl)}
+                    Logs da API: {apiName}  {/* Exibe o nome da API (banco) */}
                 </Typography>
                 <Line
                     data={data}

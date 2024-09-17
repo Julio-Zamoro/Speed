@@ -88,12 +88,13 @@ function App() {
         return () => clearInterval(intervalId);
     }, []);
 
-    const handleMonitorClick = (url) => {
-        setSelectedApi(url);
+    const handleMonitorClick = (url, name) => {
+        setSelectedApi({ url: url, name: name }); // Definindo a URL e o nome da API
         setTimeout(() => {
             detailsRef.current.scrollIntoView({ behavior: 'smooth' });
         }, 100);
     };
+    
 
     const handleLogsClick = () => {
         logsRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -121,15 +122,22 @@ function App() {
                                 },
                             }}
                         >
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                                <img src={apiLogos[index]} alt={`${apiNames[index]} logo`} style={{ width: '30px', height: '30px' }} />
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', alignSelf: 'flex-start' }}>
+                                <img 
+                                    src={apiLogos[index]} 
+                                    alt={`${apiNames[index]} logo`} 
+                                    style={{ width: '30px', height: '30px', verticalAlign: 'middle' }} // Aqui é onde o ajuste na imagem foi feito
+                                />
                                 <Typography
                                     variant="h6"
                                     sx={{
                                         fontSize: '1.2rem',
                                         fontWeight: 'bold',
-                                        color: '#4caf50',
-                                        textAlign: 'center',
+                                        color: '#f7faf8',
+                                        marginLeft: '10px',
+                                        textAlign: 'left',
+                                        display: 'flex', // Garantir que o conteúdo do Typography também esteja alinhado
+                                        alignItems: 'center',
                                     }}
                                 >
                                     {apiNames[index]}
@@ -139,7 +147,7 @@ function App() {
                                 <Button
                                     variant="contained"
                                     color="primary"
-                                    onClick={() => handleMonitorClick(url)}
+                                    onClick={() => handleMonitorClick(url, apiNames[index])}
                                     sx={{
                                         backgroundColor: '#757575',
                                         color: 'white',
@@ -193,10 +201,13 @@ function App() {
                 ))}
             </Grid>
             {selectedApi && (
-                <div ref={detailsRef} style={{ marginTop: '60px' }}>
-                    <ApiDetails apiUrl={selectedApi} />
-                </div>
+            <div ref={detailsRef} style={{ marginTop: '60px' }}>
+                <Typography variant="h6" sx={{ color: '#fff', textAlign: 'center', marginBottom: '20px' }}>
+                </Typography>
+                <ApiDetails apiUrl={selectedApi.url} apiName={selectedApi.name} /> {/* Passando tanto a URL quanto o nome */}
+            </div>
             )}
+
             {errors.length > 0 && (
                 <div ref={logsRef} style={{ marginTop: '40px' }}>
                     <Typography variant="h6" sx={{ color: '#f44336', marginBottom: '20px' }}>
