@@ -15,7 +15,8 @@ import {
 import ApiDetails from './ApiDetails';
 import axios from 'axios';
 
-// Lista de Logos
+// Importar a logo principal e as logos das APIs
+import Logo from './Logos/Logo.png';
 import LogoBB from './Logos/LogoBB 1.png';
 import LogoItau from './Logos/LogoItau 2.png';
 import LogoSicoob from './Logos/LogoSicoob 1.png';
@@ -24,6 +25,7 @@ import LogoCaixa from './Logos/LogoCaixa 1.png';
 import LogoSantander from './Logos/LogoSantander 1.png';
 import LogoBanrisul from './Logos/LogoBanrisul 1.png';
 import LogoInter from './Logos/LogoInter 1.png';
+
 
 // Lista de URLs das APIs
 const apiUrls = [
@@ -67,6 +69,7 @@ const apiLogos = [
     LogoInter
 ];
 
+
 function App() {
     const [selectedApi, setSelectedApi] = useState(null);
     const [errors, setErrors] = useState([]);
@@ -89,19 +92,30 @@ function App() {
     }, []);
 
     const handleMonitorClick = (url, name) => {
-        setSelectedApi({ url: url, name: name }); // Definindo a URL e o nome da API
+        setSelectedApi({ url: url, name: name });
         setTimeout(() => {
             detailsRef.current.scrollIntoView({ behavior: 'smooth' });
         }, 100);
     };
-    
 
     const handleLogsClick = () => {
         logsRef.current.scrollIntoView({ behavior: 'smooth' });
     };
 
     return (
-        <Container sx={{ padding: '20px', minHeight: '100vh', backgroundColor: '#121212' }}>
+        <Container sx={{ padding: '20px', minHeight: '100vh', backgroundColor: ' #090B1E' }}>
+            {/* Adicionado a logo no canto superior esquerdo */}
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+                <img 
+                    src={Logo} 
+                    alt="Logo" 
+                    style={{ width: '271px', height: '62px', marginRight: '10px' }}
+                />
+                <Typography variant="h4" sx={{ color: '#f7faf8' }}>
+                    Monitor de APIs
+                </Typography>
+            </div>
+
             <Grid container spacing={3} justifyContent="center">
                 {apiUrls.map((url, index) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
@@ -113,7 +127,7 @@ function App() {
                                 alignItems: 'center',
                                 padding: '20px',
                                 height: '250px',
-                                backgroundColor: '#1d1d1d',
+                                backgroundColor: '#242436',
                                 borderRadius: '10px',
                                 boxShadow: '0 4px 10px rgba(0, 0, 0, 0.5)',
                                 '&:hover': {
@@ -126,7 +140,7 @@ function App() {
                                 <img 
                                     src={apiLogos[index]} 
                                     alt={`${apiNames[index]} logo`} 
-                                    style={{ width: '30px', height: '30px', verticalAlign: 'middle' }} // Aqui é onde o ajuste na imagem foi feito
+                                    style={{ width: '30px', height: '30px', verticalAlign: 'middle' }} 
                                 />
                                 <Typography
                                     variant="h6"
@@ -136,7 +150,7 @@ function App() {
                                         color: '#f7faf8',
                                         marginLeft: '10px',
                                         textAlign: 'left',
-                                        display: 'flex', // Garantir que o conteúdo do Typography também esteja alinhado
+                                        display: 'flex',
                                         alignItems: 'center',
                                     }}
                                 >
@@ -200,12 +214,13 @@ function App() {
                     </Grid>
                 ))}
             </Grid>
+
             {selectedApi && (
-            <div ref={detailsRef} style={{ marginTop: '60px' }}>
-                <Typography variant="h6" sx={{ color: '#fff', textAlign: 'center', marginBottom: '20px' }}>
-                </Typography>
-                <ApiDetails apiUrl={selectedApi.url} apiName={selectedApi.name} /> {/* Passando tanto a URL quanto o nome */}
-            </div>
+                <div ref={detailsRef} style={{ marginTop: '60px' }}>
+                    <Typography variant="h6" sx={{ color: '#fff', textAlign: 'center', marginBottom: '20px' }}>
+                    </Typography>
+                    <ApiDetails apiUrl={selectedApi.url} apiName={selectedApi.name} />
+                </div>
             )}
 
             {errors.length > 0 && (
