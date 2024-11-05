@@ -1,3 +1,29 @@
+Novo script
+informações para a criação do banco de dados:
+user: 'postgres',
+    host: 'localhost',
+    database: 'postgres',
+    password: '123456',
+    port: 5432,
+
+script:
+
+CREATE TABLE api_logs (
+    id SERIAL PRIMARY KEY,
+    tipo_registro VARCHAR(255) NOT NULL,
+    codigo_banco VARCHAR(50) NOT NULL,
+    status_code INTEGER NOT NULL,
+    data_requisicao TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    tempo_requisicao INTERVAL NOT NULL,
+    resposta JSONB NOT null,
+    mensagem_erro text,
+   	url TEXT
+);
+
+
+
+Antigo -- Não usar nessa versão
+
 CREATE TABLE log (
 	id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
 	rota TEXT NOT NULL,

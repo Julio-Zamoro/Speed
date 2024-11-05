@@ -26,7 +26,6 @@ import LogoSantander from './Logos/LogoSantander 1.png';
 import LogoBanrisul from './Logos/LogoBanrisul 1.png';
 import LogoInter from './Logos/LogoInter 1.png';
 
-
 // Lista de URLs das APIs
 const apiUrls = [
     'https://jsonplaceholder.typicode.com/posts',
@@ -59,16 +58,15 @@ const apiNames = [
 const apiLogos = [
     LogoBB,
     LogoItau,
-    LogoItau, 
+    LogoItau,
     LogoSicoob,
     LogoSicredi,
-    LogoSicredi, 
+    LogoSicredi,
     LogoCaixa,
     LogoSantander,
     LogoBanrisul,
     LogoInter
 ];
-
 
 function App() {
     const [selectedApi, setSelectedApi] = useState(null);
@@ -80,9 +78,9 @@ function App() {
         const fetchErrors = async () => {
             try {
                 const response = await axios.get('http://localhost:3001/api/errors');
-                setErrors(response.data);
+                setErrors(response.data); // Armazenar os dados de erros recebidos no estado
             } catch (error) {
-                console.error('Error fetching errors:', error.message);
+                console.error('Error fetching errors:', error);
             }
         };
 
@@ -92,7 +90,7 @@ function App() {
     }, []);
 
     const handleMonitorClick = (url, name) => {
-        setSelectedApi({ url: url, name: name });
+        setSelectedApi({ url, name });
         setTimeout(() => {
             detailsRef.current.scrollIntoView({ behavior: 'smooth' });
         }, 100);
@@ -102,9 +100,19 @@ function App() {
         logsRef.current.scrollIntoView({ behavior: 'smooth' });
     };
 
+    // Função para formatar a data
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Janeiro é 0
+        const year = date.getFullYear();
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        return `${day}-${month}-${year} ${hours}:${minutes}`;
+    };
+
     return (
-        <Container sx={{ padding: '20px', minHeight: '100vh', backgroundColor: ' #090B1E' }}>
-            {/* Adicionado a logo no canto superior esquerdo */}
+        <Container sx={{ padding: '20px', minHeight: '100vh', backgroundColor: '#090B1E' }}>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
                 <img 
                     src={Logo} 
@@ -217,47 +225,52 @@ function App() {
 
             {selectedApi && (
                 <div ref={detailsRef} style={{ marginTop: '60px' }}>
-                    <Typography variant="h6" sx={{ color: '#fff', textAlign: 'center', marginBottom: '20px' }}>
+                    <Typography variant="h6" sx={{ color: '#ffff', textAlign: 'center', marginBottom: '20px' }}>
+                        Detalhes da API: {selectedApi.name}
                     </Typography>
                     <ApiDetails apiUrl={selectedApi.url} apiName={selectedApi.name} />
                 </div>
             )}
 
-            {errors.length > 0 && (
-                <div ref={logsRef} style={{ marginTop: '40px' }}>
-                    <Typography variant="h6" sx={{ color: '#f44336', marginBottom: '20px' }}>
-                        Erros de Conexão
-                    </Typography>
-                    <TableContainer
-                        component={Paper}
-                        sx={{
-                            backgroundColor: '#1d1d1d',
-                            color: '#ffffff',
-                            borderRadius: '10px',
-                            boxShadow: '0 4px 10px rgba(0, 0, 0, 0.5)',
-                        }}
-                    >
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell sx={{ color: '#ffffff', fontWeight: 'bold' }}>API URL</TableCell>
-                                    <TableCell sx={{ color: '#ffffff', fontWeight: 'bold' }}>Status</TableCell>
-                                    <TableCell sx={{ color: '#ffffff', fontWeight: 'bold' }}>Data/Hora</TableCell>
+            <div ref={logsRef} style={{ marginTop: '40px' }}>
+                <Typography variant="h6" sx={{ color: '#f44336', marginBottom: '20px' }}>
+                    Erros de Conexão
+                </Typography>
+                <TableContainer
+                    component={Paper}
+                    sx={{
+                        backgroundColor: '#1d1d1d',
+                        color: '#ffffff',
+                        borderRadius: '10px',
+                        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.5)',
+                    }}
+                >
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>Código do Banco</TableCell>
+                                <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>Tipo de Registro</TableCell>
+                                <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>Status</TableCell>
+                                <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>Data</TableCell>
+                                <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>Mensagem de Erro</TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {errors.map((error) => (
+                                <TableRow key={error.id}>
+                                    <TableCell sx={{ fontSize: '1rem', color: '#ffffff' }}>{error.codigo_banco}</TableCell>
+                                    <TableCell sx={{ fontSize: '1rem', color: '#ffffff' }}>{error.tipo_registro}</TableCell>
+                                    <TableCell sx={{ fontSize: '1rem', color: error.status_code === 200 ? 'green' : 'red' }}>
+                                        {error.status_code === 200 ? 'Sucesso' : 'Erro'}
+                                    </TableCell>
+                                    <TableCell sx={{ fontSize: '1rem', color: '#ffffff' }}>{formatDate(error.data_requisicao)}</TableCell>
+                                    <TableCell sx={{ fontSize: '1rem', color: '#ffffff' }}>{error.mensagem_erro}</TableCell>
                                 </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {errors.map((error, index) => (
-                                    <TableRow key={index}>
-                                        <TableCell sx={{ color: '#e0e0e0' }}>{error.rota}</TableCell>
-                                        <TableCell sx={{ color: '#e0e0e0' }}>{error.status}</TableCell>
-                                        <TableCell sx={{ color: '#e0e0e0' }}>{error.created_at}</TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
-                </div>
-            )}
+                            ))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+            </div>
         </Container>
     );
 }
