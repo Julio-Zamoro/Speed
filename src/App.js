@@ -139,7 +139,6 @@ function App() {
                                 borderRadius: '10px',
                                 boxShadow: '0 4px 10px rgba(0, 0, 0, 0.5)',
                                 '&:hover': {
-                                    transform: 'translateY(-5px)',
                                     boxShadow: '0 6px 15px rgba(0, 0, 0, 0.7)',
                                 },
                             }}
@@ -211,7 +210,7 @@ function App() {
                                         margin: '1px',
                                         padding: '10px 50px',
                                         '&:hover': {
-                                            backgroundColor: '#388e3c',
+                                            backgroundColor: '#4caf50',
                                         },
                                     }}
                                 >
@@ -250,7 +249,7 @@ function App() {
                             <TableRow>
                                 <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>Código do Banco</TableCell>
                                 <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>Tipo de Registro</TableCell>
-                                <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>Status</TableCell>
+                                <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>STATUS</TableCell>
                                 <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>Data</TableCell>
                                 <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>Mensagem de Erro</TableCell>
                             </TableRow>
@@ -261,7 +260,7 @@ function App() {
                                     <TableCell sx={{ fontSize: '1rem', color: '#ffffff' }}>{error.codigo_banco}</TableCell>
                                     <TableCell sx={{ fontSize: '1rem', color: '#ffffff' }}>{error.tipo_registro}</TableCell>
                                     <TableCell sx={{ fontSize: '1rem', color: error.status_code === 200 ? 'green' : 'red' }}>
-                                        {error.status_code === 200 ? 'Sucesso' : 'Erro'}
+                                        {error.status_code} {/* Exibe o código do status diretamente */}
                                     </TableCell>
                                     <TableCell sx={{ fontSize: '1rem', color: '#ffffff' }}>{formatDate(error.data_requisicao)}</TableCell>
                                     <TableCell sx={{ fontSize: '1rem', color: '#ffffff' }}>{error.mensagem_erro}</TableCell>
