@@ -71,6 +71,7 @@ const apiLogos = [
 function App() {
     const [selectedApi, setSelectedApi] = useState(null);
     const [errors, setErrors] = useState([]);
+    const [apiStatus, setApiStatus] = useState({});
     const detailsRef = useRef(null);
     const logsRef = useRef(null);
 
@@ -78,15 +79,31 @@ function App() {
         const fetchErrors = async () => {
             try {
                 const response = await axios.get('http://localhost:3001/api/errors');
-                setErrors(response.data); // Armazenar os dados de erros recebidos no estado
+                setErrors(response.data);
             } catch (error) {
                 console.error('Error fetching errors:', error);
             }
         };
 
         fetchErrors();
-        const intervalId = setInterval(fetchErrors, 60000); // Atualizar a cada 1 minuto
+        const intervalId = setInterval(fetchErrors, 60000);
         return () => clearInterval(intervalId);
+    }, []);
+
+    useEffect(() => {
+        const checkApiStatus = async () => {
+            const statusUpdates = {};
+            for (let i = 0; i < apiUrls.length; i++) {
+                try {
+                    const response = await axios.get(apiUrls[i]);
+                    statusUpdates[apiNames[i]] = response.status === 200 ? 'connected' : 'disconnected';
+                } catch (error) {
+                    statusUpdates[apiNames[i]] = 'disconnected';
+                }
+            }
+            setApiStatus(statusUpdates);
+        };
+        checkApiStatus();
     }, []);
 
     const handleMonitorClick = (url, name) => {
@@ -100,11 +117,10 @@ function App() {
         logsRef.current.scrollIntoView({ behavior: 'smooth' });
     };
 
-    // Função para formatar a data
     const formatDate = (dateString) => {
         const date = new Date(dateString);
         const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // Janeiro é 0
+        const month = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
         const hours = String(date.getHours()).padStart(2, '0');
         const minutes = String(date.getMinutes()).padStart(2, '0');
@@ -114,14 +130,8 @@ function App() {
     return (
         <Container sx={{ padding: '20px', minHeight: '100vh', backgroundColor: '#090B1E' }}>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
-                <img 
-                    src={Logo} 
-                    alt="Logo" 
-                    style={{ width: '271px', height: '62px', marginRight: '10px' }}
-                />
-                <Typography variant="h4" sx={{ color: '#f7faf8' }}>
-                    Monitor de APIs
-                </Typography>
+                <img src={Logo} alt="Logo" style={{ width: '271px', height: '62px', marginRight: '10px' }} />
+                <Typography variant="h4" sx={{ color: '#f7faf8' }}>Monitor de APIs</Typography>
             </div>
 
             <Grid container spacing={3} justifyContent="center">
@@ -138,84 +148,17 @@ function App() {
                                 backgroundColor: '#242436',
                                 borderRadius: '10px',
                                 boxShadow: '0 4px 10px rgba(0, 0, 0, 0.5)',
-                                '&:hover': {
-                                    boxShadow: '0 6px 15px rgba(0, 0, 0, 0.7)',
-                                },
+                                '&:hover': { boxShadow: '0 6px 15px rgba(0, 0, 0, 0.7)' }
                             }}
                         >
                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', alignSelf: 'flex-start' }}>
-                                <img 
-                                    src={apiLogos[index]} 
-                                    alt={`${apiNames[index]} logo`} 
-                                    style={{ width: '30px', height: '30px', verticalAlign: 'middle' }} 
-                                />
-                                <Typography
-                                    variant="h6"
-                                    sx={{
-                                        fontSize: '1.2rem',
-                                        fontWeight: 'bold',
-                                        color: '#f7faf8',
-                                        marginLeft: '10px',
-                                        textAlign: 'left',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                    }}
-                                >
-                                    {apiNames[index]}
-                                </Typography>
+                                <img src={apiLogos[index]} alt={`${apiNames[index]} logo`} style={{ width: '30px', height: '30px', verticalAlign: 'middle' }} />
+                                <Typography variant="h6" sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#f7faf8', marginLeft: '10px', textAlign: 'left', display: 'flex', alignItems: 'center' }}>{apiNames[index]}</Typography>
                             </div>
                             <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', justifyContent: 'center' }}>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={() => handleMonitorClick(url, apiNames[index])}
-                                    sx={{
-                                        backgroundColor: '#757575',
-                                        color: 'white',
-                                        fontWeight: 'bold',
-                                        borderRadius: '20px',
-                                        margin: '1px',
-                                        padding: '10px 60px',
-                                        '&:hover': {
-                                            backgroundColor: '#616161',
-                                        },
-                                    }}
-                                >
-                                    Gráfico
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    onClick={handleLogsClick}
-                                    sx={{
-                                        backgroundColor: '#757575',
-                                        color: 'white',
-                                        fontWeight: 'bold',
-                                        borderRadius: '20px',
-                                        margin: '1px',
-                                        padding: '10px 30px',
-                                        '&:hover': {
-                                            backgroundColor: '#616161',
-                                        },
-                                    }}
-                                >
-                                    Tabela de erros
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    sx={{
-                                        backgroundColor: '#4caf50',
-                                        color: 'white',
-                                        fontWeight: 'bold',
-                                        borderRadius: '20px',
-                                        margin: '1px',
-                                        padding: '10px 50px',
-                                        '&:hover': {
-                                            backgroundColor: '#4caf50',
-                                        },
-                                    }}
-                                >
-                                    Conectado
-                                </Button>
+                                <Button variant="contained" color="primary" onClick={() => handleMonitorClick(url, apiNames[index])} sx={{ backgroundColor: '#757575', color: 'white', fontWeight: 'bold', borderRadius: '20px', margin: '1px', padding: '10px 60px', '&:hover': { backgroundColor: '#616161' } }}>Gráfico</Button>
+                                <Button variant="contained" onClick={handleLogsClick} sx={{ backgroundColor: '#757575', color: 'white', fontWeight: 'bold', borderRadius: '20px', margin: '1px', padding: '10px 30px', '&:hover': { backgroundColor: '#616161' } }}>Tabela de erros</Button>
+                                <Button variant="contained" sx={{ backgroundColor: apiStatus[apiNames[index]] === 'connected' ? '#4caf50' : '#f44336', color: 'white', fontWeight: 'bold', borderRadius: '20px', margin: '1px', padding: '10px 50px', '&:hover': { backgroundColor: apiStatus[apiNames[index]] === 'connected' ? '#388e3c' : '#d32f2f' } }}>{apiStatus[apiNames[index]] === 'connected' ? 'Conectado' : 'indisponível'}</Button>
                             </div>
                         </Paper>
                     </Grid>
@@ -224,46 +167,33 @@ function App() {
 
             {selectedApi && (
                 <div ref={detailsRef} style={{ marginTop: '60px' }}>
-                    <Typography variant="h6" sx={{ color: '#ffff', textAlign: 'center', marginBottom: '20px' }}>
-                        Detalhes da API: {selectedApi.name}
-                    </Typography>
+                    <Typography variant="h6" sx={{ color: '#ffff', textAlign: 'center', marginBottom: '20px' }}>Detalhes da API: {selectedApi.name}</Typography>
                     <ApiDetails apiUrl={selectedApi.url} apiName={selectedApi.name} />
                 </div>
             )}
-
             <div ref={logsRef} style={{ marginTop: '40px' }}>
-                <Typography variant="h6" sx={{ color: '#f44336', marginBottom: '20px' }}>
-                    Erros de Conexão
-                </Typography>
-                <TableContainer
-                    component={Paper}
-                    sx={{
-                        backgroundColor: '#1d1d1d',
-                        color: '#ffffff',
-                        borderRadius: '10px',
-                        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.5)',
-                    }}
-                >
+                <Typography variant="h6" sx={{ color: '#f44336', marginBottom: '20px' }}>Erros de Conexão</Typography>
+                <TableContainer component={Paper} sx={{ backgroundColor: '#1d1d1d', color: '#ffffff', borderRadius: '10px', boxShadow: '0 4px 10px rgba(0, 0, 0, 0.5)' }}>
                     <Table>
                         <TableHead>
                             <TableRow>
                                 <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>Código do Banco</TableCell>
                                 <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>Tipo de Registro</TableCell>
-                                <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>STATUS</TableCell>
-                                <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>Data</TableCell>
+                                <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>Status</TableCell>
+                                <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>Data da Requisição</TableCell>
+                                <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>Tempo de Requisição (s)</TableCell>
                                 <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>Mensagem de Erro</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {errors.map((error) => (
-                                <TableRow key={error.id}>
-                                    <TableCell sx={{ fontSize: '1rem', color: '#ffffff' }}>{error.codigo_banco}</TableCell>
-                                    <TableCell sx={{ fontSize: '1rem', color: '#ffffff' }}>{error.tipo_registro}</TableCell>
-                                    <TableCell sx={{ fontSize: '1rem', color: error.status_code === 200 ? 'green' : 'red' }}>
-                                        {error.status_code} {/* Exibe o código do status diretamente */}
-                                    </TableCell>
-                                    <TableCell sx={{ fontSize: '1rem', color: '#ffffff' }}>{formatDate(error.data_requisicao)}</TableCell>
-                                    <TableCell sx={{ fontSize: '1rem', color: '#ffffff' }}>{error.mensagem_erro}</TableCell>
+                            {errors.map((error, index) => (
+                                <TableRow key={index}>
+                                    <TableCell sx={{ color: '#ffffff' }}>{error.codigo_banco}</TableCell>
+                                    <TableCell sx={{ color: '#ffffff' }}>{error.tipo_registro}</TableCell>
+                                    <TableCell sx={{ color: '#ffffff' }}>{error.status_code}</TableCell>
+                                    <TableCell sx={{ color: '#ffffff' }}>{formatDate(error.data_requisicao)}</TableCell>
+                                    <TableCell sx={{ color: '#ffffff' }}>{error.tempo_requisicao}</TableCell>
+                                    <TableCell sx={{ color: '#ffffff' }}>{error.mensagem_erro}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
