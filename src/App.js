@@ -75,6 +75,7 @@ function App() {
     const detailsRef = useRef(null);
     const logsRef = useRef(null);
 
+    // Recuperando os erros da API
     useEffect(() => {
         const fetchErrors = async () => {
             try {
@@ -86,10 +87,9 @@ function App() {
         };
 
         fetchErrors();
-        const intervalId = setInterval(fetchErrors, 60000);
-        return () => clearInterval(intervalId);
     }, []);
 
+    // Verificando o status das APIs
     useEffect(() => {
         const checkApiStatus = async () => {
             const statusUpdates = {};
@@ -148,17 +148,66 @@ function App() {
                                 backgroundColor: '#242436',
                                 borderRadius: '10px',
                                 boxShadow: '0 4px 10px rgba(0, 0, 0, 0.5)',
-                                '&:hover': { boxShadow: '0 6px 15px rgba(0, 0, 0, 0.7)' }
+                                '&:hover': {
+                                    boxShadow: '0 6px 15px rgba(0, 0, 0, 0.7)',
+                                },
                             }}
                         >
                             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px', alignSelf: 'flex-start' }}>
                                 <img src={apiLogos[index]} alt={`${apiNames[index]} logo`} style={{ width: '30px', height: '30px', verticalAlign: 'middle' }} />
-                                <Typography variant="h6" sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#f7faf8', marginLeft: '10px', textAlign: 'left', display: 'flex', alignItems: 'center' }}>{apiNames[index]}</Typography>
+                                <Typography variant="h6" sx={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#f7faf8', marginLeft: '10px' }}>
+                                    {apiNames[index]}
+                                </Typography>
                             </div>
                             <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px', width: '100%', justifyContent: 'center' }}>
-                                <Button variant="contained" color="primary" onClick={() => handleMonitorClick(url, apiNames[index])} sx={{ backgroundColor: '#757575', color: 'white', fontWeight: 'bold', borderRadius: '20px', margin: '1px', padding: '10px 60px', '&:hover': { backgroundColor: '#616161' } }}>Gráfico</Button>
-                                <Button variant="contained" onClick={handleLogsClick} sx={{ backgroundColor: '#757575', color: 'white', fontWeight: 'bold', borderRadius: '20px', margin: '1px', padding: '10px 30px', '&:hover': { backgroundColor: '#616161' } }}>Tabela de erros</Button>
-                                <Button variant="contained" sx={{ backgroundColor: apiStatus[apiNames[index]] === 'connected' ? '#4caf50' : '#f44336', color: 'white', fontWeight: 'bold', borderRadius: '20px', margin: '1px', padding: '10px 50px', '&:hover': { backgroundColor: apiStatus[apiNames[index]] === 'connected' ? '#388e3c' : '#d32f2f' } }}>{apiStatus[apiNames[index]] === 'connected' ? 'Conectado' : 'indisponível'}</Button>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => handleMonitorClick(url, apiNames[index])}
+                                    sx={{
+                                        backgroundColor: '#757575',
+                                        color: 'white',
+                                        fontWeight: 'bold',
+                                        borderRadius: '20px',
+                                        padding: '10px 60px',
+                                        '&:hover': {
+                                            backgroundColor: '#616161',
+                                        },
+                                    }}
+                                >
+                                    Gráfico
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    onClick={handleLogsClick}
+                                    sx={{
+                                        backgroundColor: '#757575',
+                                        color: 'white',
+                                        fontWeight: 'bold',
+                                        borderRadius: '20px',
+                                        padding: '10px 30px',
+                                        '&:hover': {
+                                            backgroundColor: '#616161',
+                                        },
+                                    }}
+                                >
+                                    Tabela de erros
+                                </Button>
+                                <Button
+                                    variant="contained"
+                                    sx={{
+                                        backgroundColor: apiStatus[apiNames[index]] === 'connected' ? '#4caf50' : '#f44336',
+                                        color: 'white',
+                                        fontWeight: 'bold',
+                                        borderRadius: '20px',
+                                        padding: '10px 50px',
+                                        '&:hover': {
+                                            backgroundColor: apiStatus[apiNames[index]] === 'connected' ? '#388e3c' : '#d32f2f',
+                                        },
+                                    }}
+                                >
+                                    {apiStatus[apiNames[index]] === 'connected' ? 'Conectado' : 'Indisponível'}
+                                </Button>
                             </div>
                         </Paper>
                     </Grid>
@@ -167,10 +216,13 @@ function App() {
 
             {selectedApi && (
                 <div ref={detailsRef} style={{ marginTop: '60px' }}>
-                    <Typography variant="h6" sx={{ color: '#ffff', textAlign: 'center', marginBottom: '20px' }}>Detalhes da API: {selectedApi.name}</Typography>
+                    <Typography variant="h6" sx={{ color: '#ffff', textAlign: 'center', marginBottom: '20px' }}>
+                        Detalhes da API: {selectedApi.name}
+                    </Typography>
                     <ApiDetails apiUrl={selectedApi.url} apiName={selectedApi.name} />
                 </div>
             )}
+
             <div ref={logsRef} style={{ marginTop: '40px' }}>
                 <Typography variant="h6" sx={{ color: '#f44336', marginBottom: '20px' }}>Erros de Conexão</Typography>
                 <TableContainer component={Paper} sx={{ backgroundColor: '#1d1d1d', color: '#ffffff', borderRadius: '10px', boxShadow: '0 4px 10px rgba(0, 0, 0, 0.5)' }}>
@@ -178,22 +230,20 @@ function App() {
                         <TableHead>
                             <TableRow>
                                 <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>Código do Banco</TableCell>
-                                <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>Tipo de Registro</TableCell>
+                                <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>URL</TableCell>
                                 <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>Status</TableCell>
                                 <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>Data da Requisição</TableCell>
-                                <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>Tempo de Requisição (s)</TableCell>
                                 <TableCell sx={{ color: '#ffffff', fontWeight: 'bold', fontSize: '1rem' }}>Mensagem de Erro</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {errors.map((error, index) => (
                                 <TableRow key={index}>
-                                    <TableCell sx={{ color: '#ffffff' }}>{error.codigo_banco}</TableCell>
-                                    <TableCell sx={{ color: '#ffffff' }}>{error.tipo_registro}</TableCell>
-                                    <TableCell sx={{ color: '#ffffff' }}>{error.status_code}</TableCell>
-                                    <TableCell sx={{ color: '#ffffff' }}>{formatDate(error.data_requisicao)}</TableCell>
-                                    <TableCell sx={{ color: '#ffffff' }}>{error.tempo_requisicao}</TableCell>
-                                    <TableCell sx={{ color: '#ffffff' }}>{error.mensagem_erro}</TableCell>
+                                    <TableCell sx={{ color: '#f7faf8' }}>{error.codigo_banco}</TableCell>
+                                    <TableCell sx={{ color: '#f7faf8' }}>{error.url}</TableCell>
+                                    <TableCell sx={{ color: '#FF0000' }}>{error.status_code}</TableCell>
+                                    <TableCell sx={{ color: '#f7faf8' }}>{formatDate(error.data_requisicao)}</TableCell>
+                                    <TableCell sx={{ color: '#f7faf8' }}>{error.mensagem_erro}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
