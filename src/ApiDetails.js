@@ -112,11 +112,38 @@ function ApiDetails({ apiUrl, apiName }) {
                             : log.tempo_requisicao * 1000;
                     return isNaN(tempoMs) || tempoMs <= 0 ? null : tempoMs;
                 }),
-                borderColor: 'rgba(255, 99, 132, 1)',
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                borderColor: filteredLogs.map((log) => {
+                    // Define a cor da linha com base no status_code
+                    if (log.status_code >= 400 && log.status_code < 600) {
+                        return 'rgba(255, 99, 132, 1)'; // Vermelho para erros
+                    }
+                    return 'rgba(75, 192, 192, 1)'; // Verde para sucesso
+                }),
+                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                pointBackgroundColor: filteredLogs.map((log) => {
+                    if (log.status_code >= 400 && log.status_code < 600) {
+                        return 'red'; // Vermelho para erros
+                    }
+                    return 'green'; // Verde para sucesso
+                }),
                 pointBorderColor: '#fff',
                 tension: 0.1,
+                segment: {
+                    borderColor: (ctx) => {
+                        // Define a cor da linha entre os pontos dinamicamente
+                        const { p0DataIndex, p1DataIndex } = ctx;
+                        const startLog = filteredLogs[p0DataIndex];
+                        const endLog = filteredLogs[p1DataIndex];
+    
+                        if (
+                            startLog?.status_code >= 400 && startLog?.status_code < 600 ||
+                            endLog?.status_code >= 400 && endLog?.status_code < 600
+                        ) {
+                            return 'rgba(255, 99, 132, 1)'; // Vermelho se qualquer ponto for erro
+                        }
+                        return 'rgba(75, 192, 192, 1)'; // Verde caso contrário
+                    },
+                },
             },
         ],
     };
