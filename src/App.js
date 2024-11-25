@@ -126,6 +126,7 @@ function App() {
         const minutes = String(date.getMinutes()).padStart(2, '0');
         return `${day}-${month}-${year} ${hours}:${minutes}`;
     };
+    
 
     return (
         <Container sx={{ padding: '20px', minHeight: '100vh', backgroundColor: '#090B1E' }}>
@@ -237,7 +238,7 @@ function App() {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {errors.map((error, index) => (
+                        {errors.slice(-10).map((error, index) => (
                                 <TableRow key={index}>
                                     <TableCell sx={{ color: '#f7faf8' }}>{error.codigo_banco}</TableCell>
                                     <TableCell sx={{ color: '#f7faf8' }}>{error.url}</TableCell>
