@@ -165,18 +165,7 @@ function ApiDetails({ apiUrl, apiName }) {
                         <MenuItem value="last7d">Últimos 7 dias</MenuItem>
                         <MenuItem value="last30d">Últimos 30 dias</MenuItem>
                     </Select>
-                    <Select
-                        value={selectedDatabase}
-                        onChange={(e) => setSelectedDatabase(e.target.value)}
-                        displayEmpty
-                        inputProps={{ 'aria-label': 'Selecionar Banco' }}
-                        style={{ color: '#ffffff' }}
-                    >
-                        <MenuItem value="Database1">Database 1</MenuItem>
-                        <MenuItem value="Database2">Database 2</MenuItem>
-                        <MenuItem value="Database3">Database 3</MenuItem>
-                    </Select>
-                </div>
+                    </div>
                 <Button variant="contained" color="primary" onClick={toggleChartType}>
                 Tipo do gráfico
                 </Button>
