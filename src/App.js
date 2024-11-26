@@ -129,23 +129,25 @@ function App() {
     
 
     return (
-        <Container sx={{ padding: '20px', minHeight: '100vh', backgroundColor: '#090B1E' }}>
+        <Container sx={{ padding: '20px', minHeight: '100vh', backgroundColor: '#090B1E'}}>
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
-                <img src={Logo} alt="Logo" style={{ width: '271px', height: '62px', marginRight: '10px' }} />
+                <img src={Logo} alt="Logo" style={{ width: '271px', height: '62px', marginRight: '10px', paddingLeft:'0' }} />
                 <Typography variant="h4" sx={{ color: '#f7faf8' }}>Monitor de APIs</Typography>
             </div>
 
-            <Grid container spacing={3} justifyContent="center">
+            <Grid container spacing={2} justifyContent="center">
                 {apiUrls.map((url, index) => (
-                    <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+                    <Grid item xs={2.4} key={index}>
                         <Paper
                             sx={{
                                 display: 'flex',
                                 flexDirection: 'column',
                                 justifyContent: 'space-between',
                                 alignItems: 'center',
-                                padding: '20px',
+                                padding: '15px',
+                                margin: '0',
                                 height: '250px',
+                                width:'200px',
                                 backgroundColor: '#242436',
                                 borderRadius: '10px',
                                 boxShadow: '0 4px 10px rgba(0, 0, 0, 0.5)',
@@ -170,7 +172,8 @@ function App() {
                                         color: 'white',
                                         fontWeight: 'bold',
                                         borderRadius: '20px',
-                                        padding: '10px 60px',
+                                        padding: '6px 30px',
+                                        fontSize: '0.8rem',
                                         '&:hover': {
                                             backgroundColor: '#616161',
                                         },
@@ -186,7 +189,8 @@ function App() {
                                         color: 'white',
                                         fontWeight: 'bold',
                                         borderRadius: '20px',
-                                        padding: '10px 30px',
+                                        padding: '6px 30px',
+                                        fontSize: '0.8rem',
                                         '&:hover': {
                                             backgroundColor: '#616161',
                                         },
@@ -201,7 +205,8 @@ function App() {
                                         color: 'white',
                                         fontWeight: 'bold',
                                         borderRadius: '20px',
-                                        padding: '10px 50px',
+                                        padding: '6px 30px',
+                                        fontSize: '0.8rem',
                                         '&:hover': {
                                             backgroundColor: apiStatus[apiNames[index]] === 'connected' ? '#388e3c' : '#d32f2f',
                                         },
