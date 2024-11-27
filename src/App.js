@@ -44,7 +44,7 @@ const apiUrls = [
 const apiNames = [
   "Banco do Brasil",
   "Itaú",
-  "Itaú Francesa",
+  "Itaú - Francesa",
   "Sicoob",
   "Sicredi - v2",
   "Sicredi - v3",
@@ -93,19 +93,60 @@ function App() {
   useEffect(() => {
     const checkApiStatus = async () => {
       const statusUpdates = {};
+      const communicationLogs = {};
+
       for (let i = 0; i < apiUrls.length; i++) {
+        const startTime = Date.now();
         try {
           const response = await axios.get(apiUrls[i]);
-          statusUpdates[apiNames[i]] =
-            response.status === 200 ? "connected" : "disconnected";
+          const endTime = Date.now();
+          const responseTime = endTime - startTime;
+
+          // Atualizando status, última comunicação e tempo de resposta
+          statusUpdates[apiNames[i]] = {
+            status: "connected",
+            lastCommunication: new Date().toISOString(),
+            responseTime: responseTime,
+            success: true,
+          };
+
+          // Simulando cálculo da porcentagem de comunicação correta
+          if (!communicationLogs[apiNames[i]]) communicationLogs[apiNames[i]] = [];
+          communicationLogs[apiNames[i]].push(true);
+
         } catch (error) {
-          statusUpdates[apiNames[i]] = "disconnected";
+          const endTime = Date.now();
+
+          // Atualizando status, última comunicação e tempo de resposta com erro
+          statusUpdates[apiNames[i]] = {
+            status: "disconnected",
+            lastCommunication: new Date().toISOString(),
+            responseTime: endTime - startTime,
+            success: false,
+          };
+
+          if (!communicationLogs[apiNames[i]]) communicationLogs[apiNames[i]] = [];
+          communicationLogs[apiNames[i]].push(false);
         }
       }
+
+      // Calculando porcentagem de comunicação correta
+      Object.keys(communicationLogs).forEach((api) => {
+        const totalRequests = communicationLogs[api].length;
+        const successfulRequests = communicationLogs[api].filter((success) => success).length;
+        const successPercentage = (successfulRequests / totalRequests) * 100;
+
+        if (statusUpdates[api]) {
+          statusUpdates[api].successPercentage = successPercentage.toFixed(1); // 1 casa decimal
+        }
+      });
+
       setApiStatus(statusUpdates);
     };
+
     checkApiStatus();
   }, []);
+
 
   const handleMonitorClick = (url, name) => {
     setSelectedApi({ url, name });
@@ -163,19 +204,19 @@ function App() {
       </div>
 
       <Grid container spacing={2} justifyContent="center">
-        {apiUrls.map((url, index) => (  
+        {apiUrls.map((url, index) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
             <Paper
               sx={{
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
-                alignItems: "center",
+                alignItems: "flex-start",
                 padding: "15px",
-                height: "250px",
+                height: "auto",
                 width: "auto",
                 backgroundColor: "#242436",
-                borderRadius: "10px",
+                borderRadius: "25px",
                 boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
                 "&:hover": {
                   boxShadow: "0 6px 15px rgba(0, 0, 0, 0.7)",
@@ -212,6 +253,31 @@ function App() {
                   {apiNames[index]}
                 </Typography>
               </div>
+
+              <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em", paddingTop: "20px"}}>
+                <strong>Última comunicação:</strong>{" "}
+                {apiStatus[apiNames[index]]?.lastCommunication
+                  ? new Date(apiStatus[apiNames[index]].lastCommunication).toLocaleString("pt-BR", {
+                    day: "2-digit",
+                    month: "2-digit",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                    hour12: false,
+                  })
+                  : "N/A"}
+              </Typography>
+              <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em" }}>
+              <strong>Tempo de Resposta: </strong>{apiStatus[apiNames[index]]?.responseTime || "N/A"} ms
+              </Typography>
+              <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em"}}>
+              <strong>Status: </strong>{apiStatus[apiNames[index]]?.status || "Desconhecido"}
+              </Typography>
+              <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em", paddingBottom:"20px"}}>
+              <strong>Comunicação Correta: </strong>{apiStatus[apiNames[index]]?.successRate || "0"}%
+              </Typography>
+
               <div
                 style={{
                   marginTop: "auto",
@@ -313,7 +379,7 @@ function App() {
           component={Paper}
           sx={{
             backgroundColor: "#1d1d1d",
-            color: "#ffffff",
+            color: "#f7faf8",
             borderRadius: "10px",
             boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
           }}
@@ -323,7 +389,7 @@ function App() {
               <TableRow>
                 <TableCell
                   sx={{
-                    color: "#ffffff",
+                    color: "#f7faf8",
                     fontWeight: "bold",
                     fontSize: "1rem",
                   }}
@@ -332,7 +398,7 @@ function App() {
                 </TableCell>
                 <TableCell
                   sx={{
-                    color: "#ffffff",
+                    color: "#f7faf8",
                     fontWeight: "bold",
                     fontSize: "1rem",
                   }}
@@ -341,7 +407,7 @@ function App() {
                 </TableCell>
                 <TableCell
                   sx={{
-                    color: "#ffffff",
+                    color: "#f7faf8",
                     fontWeight: "bold",
                     fontSize: "1rem",
                   }}
@@ -350,7 +416,7 @@ function App() {
                 </TableCell>
                 <TableCell
                   sx={{
-                    color: "#ffffff",
+                    color: "#f7faf8",
                     fontWeight: "bold",
                     fontSize: "1rem",
                   }}
@@ -359,7 +425,7 @@ function App() {
                 </TableCell>
                 <TableCell
                   sx={{
-                    color: "#ffffff",
+                    color: "#f7faf8",
                     fontWeight: "bold",
                     fontSize: "1rem",
                   }}
