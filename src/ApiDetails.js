@@ -68,7 +68,7 @@ function ApiDetails({ apiUrl, apiName }) {
             setLoading(true);
             setError(null);
             try {
-                const response = await axios.get(`https://mentir.nakayama.cloud/api/logs/rota/${encodeURIComponent(apiUrl)}`, {
+                const response = await axios.get(`https://localhost:3001/api/logs/rota/${encodeURIComponent(apiUrl)}`, {
                     params: { database: selectedDatabase },
                 });
                 setLogs(response.data.logs); // Logs da API

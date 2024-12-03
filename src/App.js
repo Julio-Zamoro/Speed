@@ -28,7 +28,7 @@ import LogoInter from "./Logos/LogoInter 1.png";
 
 // Lista de URLs das APIs
 const apiUrls = [
-  "https://jsonplaceholder.typicode.com/posts",
+  "https://jsonplaceholder.typicode.com/posts", 
   "https://jsonplaceholder.typicode.com/comments",
   "https://jsonplaceholder.typicode.com/albums",
   "https://jsonplaceholder.typicode.com/photos",
