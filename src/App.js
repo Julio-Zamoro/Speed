@@ -94,6 +94,9 @@ function App() {
     const checkApiStatus = async () => {
       const statusUpdates = {};
       const communicationLogs = {};
+      const response = await axios.get("http://localhost:3001/api/errors/count");
+      const resposta = response.data;
+      console.log(response.data)
 
       for (let i = 0; i < apiUrls.length; i++) {
         const startTime = Date.now();
@@ -130,20 +133,24 @@ function App() {
         }
       }
 
-      // Calculando porcentagem de comunicação correta
+      console.log(communicationLogs)
       Object.keys(communicationLogs).forEach((api) => {
         const totalRequests = communicationLogs[api].length;
         const successfulRequests = communicationLogs[api].filter((success) => success).length;
         const successPercentage = (successfulRequests / totalRequests) * 100;
 
         if (statusUpdates[api]) {
-          statusUpdates[api].successPercentage = successPercentage.toFixed(1); // 1 casa decimal
+          statusUpdates[api].successPercentage = successPercentage;
         }
       });
 
+      resposta.forEach(element => {
+        if (statusUpdates[element.codigo_banco]) {
+              statusUpdates[element.codigo_banco].successPercentage = element.error_percentage; 
+            }
+      });
       setApiStatus(statusUpdates);
     };
-
     checkApiStatus();
   }, []);
 
@@ -275,7 +282,7 @@ function App() {
               <strong>Status: </strong>{apiStatus[apiNames[index]]?.status || "Desconhecido"}
               </Typography>
               <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em", paddingBottom:"20px"}}>
-              <strong>Comunicação Correta: </strong>{apiStatus[apiNames[index]]?.successRate || "0"}%
+              <strong>Comunicação Correta: </strong>{apiStatus[apiNames[index]]?.successPercentage || "0"}%
               </Typography>
 
               <div

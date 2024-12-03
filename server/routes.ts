@@ -1,13 +1,7 @@
-const express = require('express');
-const { Pool } = require('pg');
-const cors = require('cors');
-const app = express();
-const port = 3001;
+import { Router } from "express"
+import {Pool} from "pg"
 
-app.use(cors());
-app.use(express.json());
-
-// Configuração do PostgreSQL
+export const routes = Router()
 const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
@@ -16,11 +10,9 @@ const pool = new Pool({
     port: 5432,
 });
 
-// Endpoint para salvar um novo log
-app.post('/logs', async (req, res) => {
+routes.post('/logs', async (req, res) => {
     const { tipo_registro, codigo_banco, status_code, data_requisicao, tempo_requisicao, resposta, url } = req.body;
 
-    // Verificação se a URL está presente
     if (!url) {
         console.error('URL ausente no corpo da requisição');
         return res.status(400).json({ error: 'O campo URL é obrigatório.' });
@@ -40,8 +32,7 @@ app.post('/logs', async (req, res) => {
     }
 });
 
-// Endpoint para obter todos os erros
-app.get('/api/errors', async (req, res) => {
+routes.get('/api/errors', async (req, res) => {
     const query = 'SELECT * FROM api_logs WHERE status_code != 200 ORDER BY data_requisicao DESC';
     try {
         const { rows } = await pool.query(query);
@@ -53,7 +44,7 @@ app.get('/api/errors', async (req, res) => {
 });
 
 // Endpoint para obter todos os logs
-app.get('/logs', async (req, res) => {
+routes.get('/logs', async (req, res) => {
     const { limit } = req.query;
     const query = 'SELECT * FROM api_logs ORDER BY data_requisicao DESC LIMIT $1';
     try {
@@ -65,8 +56,9 @@ app.get('/logs', async (req, res) => {
     }
 });
 
+
 // Endpoint para buscar logs por URL da API
-app.get('/api/logs/rota/:apiUrl', async (req, res) => {
+routes.get('/api/logs/rota/:apiUrl', async (req, res) => {
     const apiUrl = decodeURIComponent(req.params.apiUrl); // Decodifica a URL recebida
     console.log(`Fetching logs for: ${apiUrl}`); // Log para depuração
 
@@ -117,7 +109,7 @@ app.get('/api/logs/rota/:apiUrl', async (req, res) => {
     }
 });
 
-app.get('/api/errors/count', async (req, res) => {
+routes.get('/api/errors/count', async (req, res) => {
     const query = `
         WITH total_requests AS (
             SELECT codigo_banco, COUNT(*) AS total_count
@@ -148,11 +140,4 @@ app.get('/api/errors/count', async (req, res) => {
         console.error('Database error:', err.message);
         res.status(500).json({ error: err.message });
     }
-});
-
-
-
-// Inicialização do servidor
-app.listen(port, () => {
-    console.log(`API server running on http://localhost:${port}`);
 });

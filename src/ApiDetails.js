@@ -52,6 +52,7 @@ const darkTheme = createTheme({
 
 function ApiDetails({ apiUrl, apiName }) {
     const [logs, setLogs] = useState([]);
+    const [stats, setStats] = useState(null); // Novo estado para as estatísticas
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [timeFilter, setTimeFilter] = useState('last24h');
@@ -67,10 +68,11 @@ function ApiDetails({ apiUrl, apiName }) {
             setLoading(true);
             setError(null);
             try {
-                const response = await axios.get(`http://localhost:3001/api/logs/rota/${encodeURIComponent(apiUrl)}`, {
+                const response = await axios.get(`https://mentir.nakayama.cloud/api/logs/rota/${encodeURIComponent(apiUrl)}`, {
                     params: { database: selectedDatabase },
                 });
-                setLogs(response.data);
+                setLogs(response.data.logs); // Logs da API
+                setStats(response.data.stats); // Estatísticas da API
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -90,7 +92,6 @@ function ApiDetails({ apiUrl, apiName }) {
             last30d: 30 * 24 * 60 * 60 * 1000,
         };
         const filterTime = timeDurations[timeFilter];
-
         return logs.filter((log) => new Date(log.data_requisicao) > new Date(now - filterTime));
     };
 
@@ -124,10 +125,6 @@ function ApiDetails({ apiUrl, apiName }) {
                         ? 'rgba(255, 99, 132, 1)'
                         : 'rgba(75, 192, 192, 1)'
                 ),
-                pointBackgroundColor: filteredLogs.map((log) =>
-                    log.status_code >= 400 && log.status_code < 600 ? 'red' : 'green'
-                ),
-                pointBorderColor: '#fff',
                 tension: 0.1,
                 borderWidth: chartType === 'bar' ? 1 : undefined,
             },
@@ -165,6 +162,11 @@ function ApiDetails({ apiUrl, apiName }) {
                 <Typography variant="h4" gutterBottom>
                     Logs da API: {apiName}
                 </Typography>
+                {stats && (
+                    <Typography variant="body2" color="textSecondary" gutterBottom>
+                        Taxa de Sucesso: {stats.successPercentage}% | Total de Requisições: {stats.totalRequests} | Erros 404: {stats.total404}
+                    </Typography>
+                )}
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
                     <Select
                         value={timeFilter}

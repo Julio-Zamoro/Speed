@@ -1,9 +1,15 @@
+const express = require('express')
+const cors = require('cors')
+import {Pool} from "pg"
 const axios = require('axios');
 const cron = require('node-cron');
-const { Pool } = require('pg');
-const { format } = require('date-fns');
 
-// Configuração do PostgreSQL
+const { format } = require('date-fns');
+const app = express()
+
+app.use(express.json());
+app.use(cors());
+
 const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
@@ -11,6 +17,7 @@ const pool = new Pool({
     password: 'naka',
     port: 5432,
 });
+
 
 // Lista de URLs das APIs a serem monitoradas
 const apiUrls = [
@@ -94,17 +101,13 @@ async function checkApiStatus(apiUrl) {
     }
 }
 
-// Função para verificar todas as APIs da lista
 async function checkAllApis() {
     for (const url of apiUrls) {
         await checkApiStatus(url);
     }
 }
 
-// Agenda a verificação de APIs a cada 30 segundos
 cron.schedule('*/30 * * * * *', () => {
     console.log('Verificando o status das APIs...');
     checkAllApis();
 });
-
-console.log('Monitorando 10 APIs. A cada 30 segundos, será realizada uma verificação.');
