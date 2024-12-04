@@ -13,22 +13,23 @@ import {
   TableRow,
 } from "@mui/material";
 import ApiDetails from "./ApiDetails";
+import IconButton from '@mui/material/IconButton';
 import axios from "axios";
 
 // Importar a logo principal e as logos das APIs
-import Logo from "./Logos/Logo.png";
-import LogoBB from "./Logos/LogoBB 1.png";
-import LogoItau from "./Logos/LogoItau 2.png";
-import LogoSicoob from "./Logos/LogoSicoob 1.png";
-import LogoSicredi from "./Logos/LogoSicredi 1.png";
-import LogoCaixa from "./Logos/LogoCaixa 1.png";
-import LogoSantander from "./Logos/LogoSantander 1.png";
-import LogoBanrisul from "./Logos/LogoBanrisul 1.png";
-import LogoInter from "./Logos/LogoInter 1.png";
+import Logo from "./Imagens/Logo.png";
+import LogoBB from "./Imagens/LogoBB 1.png";
+import LogoItau from "./Imagens/LogoItau 2.png";
+import LogoSicoob from "./Imagens/LogoSicoob 1.png";
+import LogoSicredi from "./Imagens/LogoSicredi 1.png";
+import LogoCaixa from "./Imagens/LogoCaixa 1.png";
+import LogoSantander from "./Imagens/LogoSantander 1.png";
+import LogoBanrisul from "./Imagens/LogoBanrisul 1.png";
+import LogoInter from "./Imagens/LogoInter 1.png";
 
 // Lista de URLs das APIs
 const apiUrls = [
-  "https://jsonplaceholder.typicode.com/posts", 
+  "https://jsonplaceholder.typicode.com/posts",
   "https://jsonplaceholder.typicode.com/comments",
   "https://jsonplaceholder.typicode.com/albums",
   "https://jsonplaceholder.typicode.com/photos",
@@ -72,8 +73,31 @@ function App() {
   const [selectedApi, setSelectedApi] = useState(null);
   const [errors, setErrors] = useState([]);
   const [apiStatus, setApiStatus] = useState({});
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
   const detailsRef = useRef(null);
   const logsRef = useRef(null);
+
+  useEffect(() => {
+    // Verificar a posição da rolagem da página
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowScrollToTop(true);
+      } else {
+        setShowScrollToTop(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Função para rolar até o topo da página
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
   // Recuperando os erros da API
   useEffect(() => {
@@ -146,8 +170,8 @@ function App() {
 
       resposta.forEach(element => {
         if (statusUpdates[element.codigo_banco]) {
-              statusUpdates[element.codigo_banco].successPercentage = element.error_percentage; 
-            }
+          statusUpdates[element.codigo_banco].successPercentage = element.error_percentage;
+        }
       });
       setApiStatus(statusUpdates);
     };
@@ -261,7 +285,7 @@ function App() {
                 </Typography>
               </div>
 
-              <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em", paddingTop: "20px"}}>
+              <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em", paddingTop: "20px" }}>
                 <strong>Atualizado:</strong>{" "}
                 {apiStatus[apiNames[index]]?.lastCommunication
                   ? new Date(apiStatus[apiNames[index]].lastCommunication).toLocaleString("pt-BR", {
@@ -276,13 +300,13 @@ function App() {
                   : "N/A"}
               </Typography>
               <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em" }}>
-              <strong>Duração: </strong>{apiStatus[apiNames[index]]?.responseTime || "N/A"} ms
+                <strong>Duração: </strong>{apiStatus[apiNames[index]]?.responseTime || "N/A"} ms
               </Typography>
-              <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em"}}>
-              <strong>Status: </strong>{apiStatus[apiNames[index]]?.status || "Desconhecido"}
+              <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em" }}>
+                <strong>Status: </strong>{apiStatus[apiNames[index]]?.status || "Desconhecido"}
               </Typography>
-              <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em", paddingBottom:"20px"}}>
-              <strong>Disponibilidade: </strong>{apiStatus[apiNames[index]]?.successPercentage || "0"}%
+              <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em", paddingBottom: "20px" }}>
+                <strong>Disponibilidade: </strong>{apiStatus[apiNames[index]]?.successPercentage || "0"}%
               </Typography>
 
               <div
@@ -362,6 +386,24 @@ function App() {
           </Grid>
         ))}
       </Grid>
+
+      {showScrollToTop && (
+        <IconButton
+          onClick={scrollToTop}
+          sx={{
+            position: "fixed",
+            bottom: "20px",
+            right: "20px",
+            backgroundColor: "#616161",
+            color: "#ffffff",
+            "&:hover": {
+              backgroundColor: "#424242",
+            },
+          }}
+        >
+       <img src="./Imagens/" alt="Scroll to top" width="24" height="24" />
+        </IconButton>
+      )}
 
       {selectedApi && (
         <div ref={detailsRef} style={{ marginTop: "60px" }}>
