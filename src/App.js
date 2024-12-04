@@ -262,7 +262,7 @@ function App() {
               </div>
 
               <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em", paddingTop: "20px"}}>
-                <strong>Última comunicação:</strong>{" "}
+                <strong>Atualizado:</strong>{" "}
                 {apiStatus[apiNames[index]]?.lastCommunication
                   ? new Date(apiStatus[apiNames[index]].lastCommunication).toLocaleString("pt-BR", {
                     day: "2-digit",
@@ -276,13 +276,13 @@ function App() {
                   : "N/A"}
               </Typography>
               <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em" }}>
-              <strong>Tempo de Resposta: </strong>{apiStatus[apiNames[index]]?.responseTime || "N/A"} ms
+              <strong>Duração: </strong>{apiStatus[apiNames[index]]?.responseTime || "N/A"} ms
               </Typography>
               <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em"}}>
               <strong>Status: </strong>{apiStatus[apiNames[index]]?.status || "Desconhecido"}
               </Typography>
               <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em", paddingBottom:"20px"}}>
-              <strong>Comunicação Correta: </strong>{apiStatus[apiNames[index]]?.successPercentage || "0"}%
+              <strong>Disponibilidade: </strong>{apiStatus[apiNames[index]]?.successPercentage || "0"}%
               </Typography>
 
               <div
@@ -369,18 +369,19 @@ function App() {
             variant="h6"
             sx={{ color: "#ffff", textAlign: "center", marginBottom: "20px" }}
           >
-            Detalhes da API: {selectedApi.name}
+
           </Typography>
           <ApiDetails apiUrl={selectedApi.url} apiName={selectedApi.name} />
         </div>
       )}
 
       <div ref={logsRef} style={{ marginTop: "40px" }}>
+
         <Typography
-          variant="h6"
-          sx={{ color: "#f44336", marginBottom: "20px" }}
+          variant="h5"
+          sx={{ color: "#ffff", marginBottom: "20px" }}
         >
-          Erros de Conexão
+          Detalhamento de Erros
         </Typography>
         <TableContainer
           component={Paper}
@@ -403,15 +404,7 @@ function App() {
                 >
                   Código do Banco
                 </TableCell>
-                <TableCell
-                  sx={{
-                    color: "#f7faf8",
-                    fontWeight: "bold",
-                    fontSize: "1rem",
-                  }}
-                >
-                  URL
-                </TableCell>
+
                 <TableCell
                   sx={{
                     color: "#f7faf8",
@@ -447,7 +440,6 @@ function App() {
                   <TableCell sx={{ color: "#f7faf8" }}>
                     {error.codigo_banco}
                   </TableCell>
-                  <TableCell sx={{ color: "#f7faf8" }}>{error.url}</TableCell>
                   <TableCell sx={{ color: "#FF0000" }}>
                     {error.status_code}
                   </TableCell>

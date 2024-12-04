@@ -159,8 +159,8 @@ function ApiDetails({ apiUrl, apiName }) {
         <ThemeProvider theme={darkTheme}>
             <CssBaseline />
             <Container sx={{ padding: '20px', backgroundColor: '#1d1d1d', minHeight: '50vh' }}>
-                <Typography variant="h4" gutterBottom>
-                    Logs da API: {apiName}
+                <Typography variant="h5" gutterBottom>
+                    Monitoramento da API: {apiName}
                 </Typography>
                 {stats && (
                     <Typography variant="body2" color="textSecondary" gutterBottom>
