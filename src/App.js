@@ -336,7 +336,7 @@ function App() {
                   variant="contained"
                   sx={{
                     backgroundColor:
-                      apiStatus[apiNames[index]] === "connected"
+                      apiStatus[apiNames[index]]?.status === "connected"
                         ? "#4caf50"
                         : "#f44336",
                     color: "white",
@@ -347,13 +347,13 @@ function App() {
                     boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
                     "&:hover": {
                       backgroundColor:
-                        apiStatus[apiNames[index]] === "connected"
+                        apiStatus[apiNames[index]]?.status === "connected"
                           ? "#4caf50"
                           : "#f44336",
                     },
                   }}
                 >
-                  {apiStatus[apiNames[index]] === "connected"
+                  {apiStatus[apiNames[index]]?.status === "connected"
                     ? "Disponível"
                     : "Indisponível"}
                 </Button>
