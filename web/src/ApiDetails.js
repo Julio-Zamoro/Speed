@@ -98,9 +98,13 @@ function ApiDetails({ apiUrl, apiName }) {
     const filteredLogs = filterLogs(logs).sort((a, b) => new Date(a.data_requisicao) - new Date(b.data_requisicao));
 
     const data = {
-        labels: filteredLogs.map((log) => {
-            const date = new Date(log.data_requisicao);
-            return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+        labels: filteredLogs.map((log, index) => {
+            // Sempre mostrar o rótulo para o primeiro e o último log
+            if (index === 0 || index === filteredLogs.length - 1) {
+                const date = new Date(log.data_requisicao);
+                return `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+            }
+            return ''; // Deixa os rótulos intermediários em branco
         }),
         datasets: [
             {
