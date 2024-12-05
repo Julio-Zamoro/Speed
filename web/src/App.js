@@ -369,7 +369,7 @@ function App() {
             variant="h6"
             sx={{ color: "#ffff", textAlign: "center", marginBottom: "20px" }}
           >
-            Detalhes da API: {selectedApi.name}
+            {/* Detalhes da API: {selectedApi.name} */}
           </Typography>
           <ApiDetails apiUrl={selectedApi.url} apiName={selectedApi.name} />
         </div>
