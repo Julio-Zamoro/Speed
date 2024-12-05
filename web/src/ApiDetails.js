@@ -95,7 +95,7 @@ function ApiDetails({ apiUrl, apiName }) {
         return logs.filter((log) => new Date(log.data_requisicao) > new Date(now - filterTime));
     };
 
-    const filteredLogs = filterLogs(logs);
+    const filteredLogs = filterLogs(logs).sort((a, b) => new Date(a.data_requisicao) - new Date(b.data_requisicao));
 
     const data = {
         labels: filteredLogs.map((log) => {
