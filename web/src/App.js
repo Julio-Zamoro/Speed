@@ -13,18 +13,20 @@ import {
   TableRow,
 } from "@mui/material";
 import ApiDetails from "./ApiDetails";
+import IconButton from '@mui/material/IconButton';
 import axios from "axios";
 
 // Importar a logo principal e as logos das APIs
-import Logo from "./Logos/Logo.png";
-import LogoBB from "./Logos/LogoBB 1.png";
-import LogoItau from "./Logos/LogoItau 2.png";
-import LogoSicoob from "./Logos/LogoSicoob 1.png";
-import LogoSicredi from "./Logos/LogoSicredi 1.png";
-import LogoCaixa from "./Logos/LogoCaixa 1.png";
-import LogoSantander from "./Logos/LogoSantander 1.png";
-import LogoBanrisul from "./Logos/LogoBanrisul 1.png";
-import LogoInter from "./Logos/LogoInter 1.png";
+import Logo from "./Imagens/Logo.png";
+import LogoBB from "./Imagens/LogoBB 1.png";
+import LogoItau from "./Imagens/LogoItau 2.png";
+import LogoSicoob from "./Imagens/LogoSicoob 1.png";
+import LogoSicredi from "./Imagens/LogoSicredi 1.png";
+import LogoCaixa from "./Imagens/LogoCaixa 1.png";
+import LogoSantander from "./Imagens/LogoSantander 1.png";
+import LogoBanrisul from "./Imagens/LogoBanrisul 1.png";
+import LogoInter from "./Imagens/LogoInter 1.png";
+import Seta from "./Imagens/Seta.png";
 
 // Lista de URLs das APIs
 const apiUrls = [
@@ -72,8 +74,32 @@ function App() {
   const [selectedApi, setSelectedApi] = useState(null);
   const [errors, setErrors] = useState([]);
   const [apiStatus, setApiStatus] = useState({});
+  const [showScrollToTop, setShowScrollToTop] = useState(false);
   const detailsRef = useRef(null);
   const logsRef = useRef(null);
+
+  useEffect(() => {
+    // Verificar a posição da rolagem da página
+    const handleScroll = () => {
+      if (window.scrollY > 300) {
+        setShowScrollToTop(true);
+      } else {
+        setShowScrollToTop(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Função para rolar até o topo da página
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
 
   // Recuperando os erros da API
   useEffect(() => {
@@ -262,7 +288,7 @@ function App() {
               </div>
 
               <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em", paddingTop: "20px"}}>
-                <strong>Última comunicação:</strong>{" "}
+                <strong>Atualizado:</strong>{" "}
                 {apiStatus[apiNames[index]]?.lastCommunication
                   ? new Date(apiStatus[apiNames[index]].lastCommunication).toLocaleString("pt-BR", {
                     day: "2-digit",
@@ -276,13 +302,13 @@ function App() {
                   : "N/A"}
               </Typography>
               <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em" }}>
-              <strong>Tempo de Resposta: </strong>{apiStatus[apiNames[index]]?.responseTime || "N/A"} ms
+              <strong>Duração: </strong>{apiStatus[apiNames[index]]?.responseTime || "N/A"} ms
               </Typography>
               <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em"}}>
               <strong>Status: </strong>{apiStatus[apiNames[index]]?.status || "Desconhecido"}
               </Typography>
               <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em", paddingBottom:"20px"}}>
-              <strong>Comunicação Correta: </strong>{apiStatus[apiNames[index]]?.successPercentage || "0"}%
+              <strong>Disponibilidade: </strong>{apiStatus[apiNames[index]]?.successPercentage || "0"}%
               </Typography>
 
               <div
@@ -336,7 +362,7 @@ function App() {
                   variant="contained"
                   sx={{
                     backgroundColor:
-                      apiStatus[apiNames[index]] === "connected"
+                      apiStatus[apiNames[index]]?.status === "connected"
                         ? "#4caf50"
                         : "#f44336",
                     color: "white",
@@ -347,13 +373,13 @@ function App() {
                     boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
                     "&:hover": {
                       backgroundColor:
-                        apiStatus[apiNames[index]] === "connected"
+                        apiStatus[apiNames[index]]?.status === "connected"
                           ? "#4caf50"
                           : "#f44336",
                     },
                   }}
                 >
-                  {apiStatus[apiNames[index]] === "connected"
+                  {apiStatus[apiNames[index]]?.status === "connected"
                     ? "Disponível"
                     : "Indisponível"}
                 </Button>
@@ -362,6 +388,24 @@ function App() {
           </Grid>
         ))}
       </Grid>
+
+      {showScrollToTop && (
+        <IconButton
+          onClick={scrollToTop}
+          sx={{
+            position: "fixed",
+            bottom: "20px",
+            right: "20px",
+            backgroundColor: "#616161",
+            color: "#ffffff",
+            "&:hover": {
+              backgroundColor: "#424242",
+            },
+          }}
+        >
+       <img src={Seta} alt="Scroll to top" width="25" height="25" />
+        </IconButton>
+      )}
 
       {selectedApi && (
         <div ref={detailsRef} style={{ marginTop: "60px" }}>
@@ -376,10 +420,10 @@ function App() {
 
       <div ref={logsRef} style={{ marginTop: "40px" }}>
         <Typography
-          variant="h6"
+          variant="h5"
           sx={{ color: "#f44336", marginBottom: "20px" }}
         >
-          Erros de Conexão
+          Detalhamento de erros
         </Typography>
         <TableContainer
           component={Paper}
@@ -401,15 +445,6 @@ function App() {
                   }}
                 >
                   Código do Banco
-                </TableCell>
-                <TableCell
-                  sx={{
-                    color: "#f7faf8",
-                    fontWeight: "bold",
-                    fontSize: "1rem",
-                  }}
-                >
-                  URL
                 </TableCell>
                 <TableCell
                   sx={{
@@ -446,7 +481,6 @@ function App() {
                   <TableCell sx={{ color: "#f7faf8" }}>
                     {error.codigo_banco}
                   </TableCell>
-                  <TableCell sx={{ color: "#f7faf8" }}>{error.url}</TableCell>
                   <TableCell sx={{ color: "#FF0000" }}>
                     {error.status_code}
                   </TableCell>
