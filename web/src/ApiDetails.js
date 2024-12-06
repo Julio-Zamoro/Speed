@@ -40,7 +40,7 @@ const darkTheme = createTheme({
         },
     },
     typography: {
-        fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+        fontFamily: '"montserrat", "Roboto", "Helvetica", "Arial", sans-serif',
         h4: {
             color: '#ffffff',
         },

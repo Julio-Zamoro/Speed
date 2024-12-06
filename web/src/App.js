@@ -13,7 +13,9 @@ import {
   TableRow,
 } from "@mui/material";
 import ApiDetails from "./ApiDetails";
-import IconButton from '@mui/material/IconButton';
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import IconButton from "@mui/material/IconButton";
+import "@fontsource/montserrat"
 import axios from "axios";
 
 // Importar a logo principal e as logos das APIs
@@ -70,6 +72,12 @@ const apiLogos = [
   LogoInter,
 ];
 
+const theme = createTheme({
+  typography: {
+    fontFamily: "montserrat", // Exemplo de nova fonte
+  },
+});
+
 function App() {
   const [selectedApi, setSelectedApi] = useState(null);
   const [errors, setErrors] = useState([]);
@@ -100,7 +108,6 @@ function App() {
     });
   };
 
-
   // Recuperando os erros da API
   useEffect(() => {
     const fetchErrors = async () => {
@@ -120,9 +127,11 @@ function App() {
     const checkApiStatus = async () => {
       const statusUpdates = {};
       const communicationLogs = {};
-      const response = await axios.get("http://localhost:3001/api/errors/count");
+      const response = await axios.get(
+        "http://localhost:3001/api/errors/count"
+      );
       const resposta = response.data;
-      console.log(response.data)
+      console.log(response.data);
 
       for (let i = 0; i < apiUrls.length; i++) {
         const startTime = Date.now();
@@ -140,9 +149,9 @@ function App() {
           };
 
           // Simulando cálculo da porcentagem de comunicação correta
-          if (!communicationLogs[apiNames[i]]) communicationLogs[apiNames[i]] = [];
+          if (!communicationLogs[apiNames[i]])
+            communicationLogs[apiNames[i]] = [];
           communicationLogs[apiNames[i]].push(true);
-
         } catch (error) {
           const endTime = Date.now();
 
@@ -154,15 +163,18 @@ function App() {
             success: false,
           };
 
-          if (!communicationLogs[apiNames[i]]) communicationLogs[apiNames[i]] = [];
+          if (!communicationLogs[apiNames[i]])
+            communicationLogs[apiNames[i]] = [];
           communicationLogs[apiNames[i]].push(false);
         }
       }
 
-      console.log(communicationLogs)
+      console.log(communicationLogs);
       Object.keys(communicationLogs).forEach((api) => {
         const totalRequests = communicationLogs[api].length;
-        const successfulRequests = communicationLogs[api].filter((success) => success).length;
+        const successfulRequests = communicationLogs[api].filter(
+          (success) => success
+        ).length;
         const successPercentage = (successfulRequests / totalRequests) * 100;
 
         if (statusUpdates[api]) {
@@ -170,16 +182,16 @@ function App() {
         }
       });
 
-      resposta.forEach(element => {
+      resposta.forEach((element) => {
         if (statusUpdates[element.codigo_banco]) {
-          statusUpdates[element.codigo_banco].successPercentage = element.error_percentage;
+          statusUpdates[element.codigo_banco].successPercentage =
+            element.error_percentage;
         }
       });
       setApiStatus(statusUpdates);
     };
     checkApiStatus();
   }, []);
-
 
   const handleMonitorClick = (url, name) => {
     setSelectedApi({ url, name });
@@ -203,303 +215,337 @@ function App() {
   };
 
   return (
-    <Container
-      sx={{ padding: "20px", minHeight: "100vh", backgroundColor: "#090B1E" }}
-    >
-      <div
-        style={{ display: "flex", alignItems: "center", marginBottom: "20px" }}
+    <ThemeProvider theme={theme}>
+      <Container
+        sx={{ padding: "20px", minHeight: "100vh", backgroundColor: "#090B1E"}}
       >
-        <img
-          src={Logo}
-          alt="Logo"
+        <div
           style={{
-            width: "45%",
-            maxWidth: "200px",
-            height: "auto",
-            marginRight: "10px",
-          }}
-        />
-        <Typography
-          variant="h4"
-          sx={{
-            color: "#f7faf8",
-            fontSize: "2rem", // Tamanho fixo para maior controle
-            "@media (max-width: 600px)": {
-              fontSize: "1.5rem", // Reduz o tamanho da fonte em telas pequenas
-            },
-            "@media (max-width: 400px)": {
-              fontSize: "1.2rem", // Reduz ainda mais o tamanho em telas muito pequenas
-            },
+            display: "flex",
+            alignItems: "center",
+            marginBottom: "20px",
           }}
         >
-          Monitor de APIs
-        </Typography>
-      </div>
+          <img
+            src={Logo}
+            alt="Logo"
+            style={{
+              width: "45%",
+              maxWidth: "200px",
+              height: "auto",
+              marginRight: "10px",
+            }}
+          />
+          <Typography
+            variant="h4"
+            sx={{
+              color: "#f7faf8",
+              fontWeight:"bold",
+              fontSize: "2rem", // Tamanho fixo para maior controle
+              "@media (max-width: 600px)": {
+                fontSize: "1.5rem", // Reduz o tamanho da fonte em telas pequenas
+              },
+              "@media (max-width: 400px)": {
+                fontSize: "1.2rem", // Reduz ainda mais o tamanho em telas muito pequenas
+              },
+            }}
+          >
+            Monitor de API's
+          </Typography>
+        </div>
 
-      <Grid container spacing={2} justifyContent="center">
-        {apiUrls.map((url, index) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
-            <Paper
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "space-between",
-                alignItems: "flex-start",
-                padding: "15px",
-                height: "auto",
-                width: "auto",
-                backgroundColor: "#242436",
-                borderRadius: "25px",
-                boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
-                "&:hover": {
-                  boxShadow: "0 6px 15px rgba(0, 0, 0, 0.7)",
-                },
-              }}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "10px",
-                  marginBottom: "10px",
-                  alignSelf: "flex-start",
-                }}
-              >
-                <img
-                  src={apiLogos[index]}
-                  alt={`${apiNames[index]} logo`}
-                  style={{
-                    width: "30px",
-                    height: "30px",
-                    verticalAlign: "middle",
-                  }}
-                />
-                <Typography
-                  variant="h6"
-                  sx={{
-                    fontSize: "1.2rem",
-                    fontWeight: "bold",
-                    color: "#f7faf8",
-                    marginLeft: "10px",
-                  }}
-                >
-                  {apiNames[index]}
-                </Typography>
-              </div>
-
-              <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em", paddingTop: "20px" }}>
-                <strong>Atualizado:</strong>{" "}
-                {apiStatus[apiNames[index]]?.lastCommunication
-                  ? new Date(apiStatus[apiNames[index]].lastCommunication).toLocaleString("pt-BR", {
-                    day: "2-digit",
-                    month: "2-digit",
-                    year: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit",
-                    hour12: false,
-                  })
-                  : "N/A"}
-              </Typography>
-              <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em" }}>
-                <strong>Duração: </strong>{apiStatus[apiNames[index]]?.responseTime || "N/A"} ms
-              </Typography>
-              <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em" }}>
-                <strong>Status: </strong>{apiStatus[apiNames[index]]?.status || "Desconhecido"}
-              </Typography>
-              <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em", paddingBottom: "20px" }}>
-                <strong>Disponibilidade: </strong>{apiStatus[apiNames[index]]?.successPercentage || "0"}%
-              </Typography>
-
-              <div
-                style={{
-                  marginTop: "auto",
+        <Grid container spacing={2} justifyContent="center">
+          {apiUrls.map((url, index) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+              <Paper
+                sx={{
                   display: "flex",
                   flexDirection: "column",
-                  gap: "10px",
-                  width: "100%",
-                  justifyContent: "center",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
+                  padding: "15px",
+                  height: "auto",
+                  width: "auto",
+                  backgroundColor: "#242436",
+                  borderRadius: "25px",
+                  boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+                  "&:hover": {
+                    boxShadow: "0 6px 15px rgba(0, 0, 0, 0.7)",
+                  },
                 }}
               >
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => handleMonitorClick(url, apiNames[index])}
-                  sx={{
-                    backgroundColor: "#757575",
-                    color: "white",
-                    fontWeight: "bold",
-                    borderRadius: "20px",
-                    padding: "6px 30px",
-                    fontSize: "0.8rem",
-                    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
-                    "&:hover": {
-                      backgroundColor: "#616161",
-                    },
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "10px",
+                    marginBottom: "10px",
+                    alignSelf: "flex-start",
                   }}
                 >
-                  Gráfico
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={handleLogsClick}
+                  <img
+                    src={apiLogos[index]}
+                    alt={`${apiNames[index]} logo`}
+                    style={{
+                      width: "30px",
+                      height: "30px",
+                      verticalAlign: "middle",
+                    }}
+                  />
+                  <Typography
+                    variant="h6"
+                    sx={{
+                      fontSize: "1.2rem",
+                      fontWeight: "500",
+                      color: "#f7faf8",
+                      marginLeft: "10px",
+                    }}
+                  >
+                    {apiNames[index]}
+                  </Typography>
+                </div>
+
+                <Typography
+                  variant="body2"
                   sx={{
-                    backgroundColor: "#757575",
-                    color: "white",
-                    fontWeight: "bold",
-                    borderRadius: "20px",
-                    padding: "6px 30px",
-                    fontSize: "0.8rem",
-                    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
-                    "&:hover": {
-                      backgroundColor: "#616161",
-                    },
+                    color: "#f7faf8",
+                    fontSize: "0.7em",
+                    paddingTop: "20px",
                   }}
                 >
-                  Tabela de erros
-                </Button>
-                <Button
-                  variant="contained"
+                  Atualizado:{" "}
+                  {apiStatus[apiNames[index]]?.lastCommunication
+                    ? new Date(
+                        apiStatus[apiNames[index]].lastCommunication
+                      ).toLocaleString("pt-BR", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                        hour12: false,
+                      })
+                    : "N/A"}
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ color: "#f7faf8", fontSize: "0.7em" }}
+                >
+                  Duração:{" "}
+                  {apiStatus[apiNames[index]]?.responseTime || "N/A"} ms
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ color: "#f7faf8", fontSize: "0.7em" }}
+                >
+                  Status:{" "} 
+                  {apiStatus[apiNames[index]]?.status || "Desconhecido"}
+                </Typography>
+                <Typography
+                  variant="body2"
                   sx={{
-                    backgroundColor:
-                      apiStatus[apiNames[index]]?.status === "connected"
-                        ? "#4caf50"
-                        : "#f44336",
-                    color: "white",
-                    fontWeight: "bold",
-                    borderRadius: "20px",
-                    padding: "6px 30px",
-                    fontSize: "0.8rem",
-                    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
-                    "&:hover": {
+                    color: "#f7faf8",
+                    fontSize: "0.7em",
+                    paddingBottom: "20px",
+                  }}
+                >
+                  Disponibilidade:{" "}
+                  {apiStatus[apiNames[index]]?.successPercentage || "0"}%
+                </Typography>
+
+                <div
+                  style={{
+                    marginTop: "auto",
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "10px",
+                    width: "100%",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleMonitorClick(url, apiNames[index])}
+                    sx={{
+                      backgroundColor: "#757575",
+                      color: "white",
+                      fontWeight: "500",
+                      borderRadius: "20px",
+                      padding: "6px 30px",
+                      fontSize: "0.8rem",
+                      letterSpacing: "0.03rem",
+                      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+                      "&:hover": {
+                        backgroundColor: "#616161",
+                      },
+                    }}
+                  >
+                    Gráfico
+                  </Button>
+                  <Button
+                    variant="contained"
+                    onClick={handleLogsClick}
+                    sx={{
+                      backgroundColor: "#757575",
+                      color: "white",
+                      fontWeight: "500",
+                      borderRadius: "20px",
+                      padding: "6px 30px",
+                      fontSize: "0.8rem",
+                      letterSpacing: "0.03rem",
+                      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+                      "&:hover": {
+                        backgroundColor: "#616161",
+                      },
+                    }}
+                  >
+                    Tabela de erros
+                  </Button>
+                  <Button
+                    variant="contained"
+                    sx={{
                       backgroundColor:
                         apiStatus[apiNames[index]]?.status === "connected"
                           ? "#4caf50"
                           : "#f44336",
-                    },
-                  }}
-                >
-                  {apiStatus[apiNames[index]]?.status === "connected"
-                    ? "Disponível"
-                    : "Indisponível"}
-                </Button>
-              </div>
-            </Paper>
-          </Grid>
-        ))}
-      </Grid>
+                      color: "white",
+                      fontWeight: "500",
+                      borderRadius: "20px",
+                      padding: "6px 30px",
+                      fontSize: "0.8rem",
+                      letterSpacing: "0.03rem",
+                      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+                      "&:hover": {
+                        backgroundColor:
+                          apiStatus[apiNames[index]]?.status === "connected"
+                            ? "#4caf50"
+                            : "#f44336",
+                      },
+                    }}
+                  >
+                    {apiStatus[apiNames[index]]?.status === "connected"
+                      ? "Disponível"
+                      : "Indisponível"}
+                  </Button>
+                </div>
+              </Paper>
+            </Grid>
+          ))}
+        </Grid>
 
-      {showScrollToTop && (
-        <IconButton
-          onClick={scrollToTop}
-          sx={{
-            position: "fixed",
-            bottom: "20px",
-            right: "20px",
-            backgroundColor: "#616161",
-            color: "#ffffff",
-            "&:hover": {
-              backgroundColor: "#424242",
-            },
-          }}
-        >
-          <img src={Seta} alt="Scroll to top" width="25" height="25" />
-        </IconButton>
-      )}
-
-      {selectedApi && (
-        <div ref={detailsRef} style={{ marginTop: "60px" }}>
-          <Typography
-            variant="h6"
-            sx={{ color: "#ffff", textAlign: "center", marginBottom: "20px" }}
+        {showScrollToTop && (
+          <IconButton
+            onClick={scrollToTop}
+            sx={{
+              position: "fixed",
+              bottom: "20px",
+              right: "20px",
+              backgroundColor: "#616161",
+              color: "#ffffff",
+              "&:hover": {
+                backgroundColor: "#424242",
+              },
+            }}
           >
-          </Typography>
-          <ApiDetails apiUrl={selectedApi.url} apiName={selectedApi.name} />
-        </div>
-      )}
+            <img src={Seta} alt="Scroll to top" width="25" height="25" />
+          </IconButton>
+        )}
 
-      <div ref={logsRef} style={{ marginTop: "40px" }}>
-        <Typography
-          variant="h5"
-          sx={{ color: "#ffff", marginBottom: "10px" }}
-        >
-          Detalhamento de erros
-        </Typography>
-        <TableContainer
-          component={Paper}
-          sx={{
-            backgroundColor: "#242436",
-            color: "#f7faf8",
-            borderRadius: "10px",
-            boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
-            "&:hover": {
-              boxShadow: "0 6px 15px rgba(0, 0, 0, 0.7)",
-            },
-          }}
-        >
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell
-                  sx={{
-                    color: "#f7faf8",
-                    fontWeight: "bold",
-                    fontSize: "1rem",
-                  }}
-                >
-                  Código do Banco
-                </TableCell>
-                <TableCell
-                  sx={{
-                    color: "#f7faf8",
-                    fontWeight: "bold",
-                    fontSize: "1rem",
-                  }}
-                >
-                  Status
-                </TableCell>
-                <TableCell
-                  sx={{
-                    color: "#f7faf8",
-                    fontWeight: "bold",
-                    fontSize: "1rem",
-                  }}
-                >
-                  Data da Requisição
-                </TableCell>
-                <TableCell
-                  sx={{
-                    color: "#f7faf8",
-                    fontWeight: "bold",
-                    fontSize: "1rem",
-                  }}
-                >
-                  Mensagem de Erro
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {errors.slice(-10).map((error, index) => (
-                <TableRow key={index}>
-                  <TableCell sx={{ color: "#f7faf8" }}>
-                    {error.codigo_banco}
+        {selectedApi && (
+          <div ref={detailsRef} style={{ marginTop: "60px" }}>
+            <Typography
+              variant="h6"
+              sx={{ color: "#ffff", textAlign: "center", marginBottom: "20px" }}
+            ></Typography>
+            <ApiDetails apiUrl={selectedApi.url} apiName={selectedApi.name} />
+          </div>
+        )}
+
+        <div ref={logsRef} style={{ marginTop: "40px" }}>
+          <Typography
+            variant="h5"
+            sx={{ color: "#ffff", marginBottom: "10px" }}
+          >
+            Detalhamento de erros
+          </Typography>
+          <TableContainer
+            component={Paper}
+            sx={{
+              backgroundColor: "#242436",
+              color: "#f7faf8",
+              borderRadius: "10px",
+              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+              "&:hover": {
+                boxShadow: "0 6px 15px rgba(0, 0, 0, 0.7)",
+              },
+            }}
+          >
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell
+                    sx={{
+                      color: "#f7faf8",
+                      fontWeight: "bold",
+                      fontSize: "1rem",
+                    }}
+                  >
+                    Código do Banco
                   </TableCell>
-                  <TableCell sx={{ color: "#FF0000" }}>
-                    {error.status_code}
+                  <TableCell
+                    sx={{
+                      color: "#f7faf8",
+                      fontWeight: "bold",
+                      fontSize: "1rem",
+                    }}
+                  >
+                    Status
                   </TableCell>
-                  <TableCell sx={{ color: "#f7faf8" }}>
-                    {formatDate(error.data_requisicao)}
+                  <TableCell
+                    sx={{
+                      color: "#f7faf8",
+                      fontWeight: "bold",
+                      fontSize: "1rem",
+                    }}
+                  >
+                    Data da Requisição
                   </TableCell>
-                  <TableCell sx={{ color: "#f7faf8" }}>
-                    {error.mensagem_erro}
+                  <TableCell
+                    sx={{
+                      color: "#f7faf8",
+                      fontWeight: "bold",
+                      fontSize: "1rem",
+                    }}
+                  >
+                    Mensagem de Erro
                   </TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
-    </Container>
+              </TableHead>
+              <TableBody>
+                {errors.slice(-10).map((error, index) => (
+                  <TableRow key={index}>
+                    <TableCell sx={{ color: "#f7faf8" }}>
+                      {error.codigo_banco}
+                    </TableCell>
+                    <TableCell sx={{ color: "#FF0000" }}>
+                      {error.status_code}
+                    </TableCell>
+                    <TableCell sx={{ color: "#f7faf8" }}>
+                      {formatDate(error.data_requisicao)}
+                    </TableCell>
+                    <TableCell sx={{ color: "#f7faf8" }}>
+                      {error.mensagem_erro}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
+      </Container>
+    </ThemeProvider>
   );
 }
 

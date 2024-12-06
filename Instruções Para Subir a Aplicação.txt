@@ -1,0 +1,13 @@
+Execute: npm i
+Dentro da raiz do projeto, para instalar as dependências
+
+Execute: npm start run-server
+Dentro da pasta Speed\server
+
+Execute: npm run monitor
+Dentro da pasta Speed\server
+(Após ter realizado a conexão correta com o banco de dados)
+
+Execute: npm start
+Dentro da pasta web
+

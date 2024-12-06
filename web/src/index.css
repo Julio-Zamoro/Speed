@@ -1,35 +1,8 @@
 body {
   margin: 0;
-  font-family: 'Roboto', sans-serif;
   background-color: #090B1E;
   color: #ffffff;
 }
 
-.card {
-  transition: all 0.3s ease;
-}
 
-button.connected {
-  background-color: #4caf50;
-  color: white;
-  font-weight: bold;
-}
 
-button.disconnected {
-  background-color: #f44336;
-  color: white;
-  font-weight: bold;
-}
-
-.table {
-  background-color: #090B1E;
-  color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-}
-body {
-  background-color: #090B1E; /* Ajuste esta cor se necessário */
-  color: white; /* Certifique-se de que o texto está visível */
-  margin: 0;
-  padding: 0;
-}
