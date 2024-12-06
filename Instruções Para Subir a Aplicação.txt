@@ -11,3 +11,6 @@ Dentro da pasta Speed\server
 Execute: npm start
 Dentro da pasta web
 
+Para instalar a fonte utilizada execute:
+npm install @fontsource/montserrat
+
