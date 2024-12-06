@@ -241,12 +241,12 @@ function App() {
             sx={{
               color: "#f7faf8",
               fontWeight:"bold",
-              fontSize: "2rem", // Tamanho fixo para maior controle
+              fontSize: "2rem",
               "@media (max-width: 600px)": {
-                fontSize: "1.5rem", // Reduz o tamanho da fonte em telas pequenas
+                fontSize: "1.5rem",
               },
               "@media (max-width: 400px)": {
-                fontSize: "1.2rem", // Reduz ainda mais o tamanho em telas muito pequenas
+                fontSize: "1.2rem",
               },
             }}
           >
@@ -256,7 +256,7 @@ function App() {
 
         <Grid container spacing={2} justifyContent="center">
           {apiUrls.map((url, index) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+            <Grid item xs={12} sm={6} md={4} lg={2.4} key={index}>
               <Paper
                 sx={{
                   display: "flex",
@@ -278,7 +278,6 @@ function App() {
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    gap: "10px",
                     marginBottom: "10px",
                     alignSelf: "flex-start",
                   }}
@@ -295,7 +294,7 @@ function App() {
                   <Typography
                     variant="h6"
                     sx={{
-                      fontSize: "1.2rem",
+                      fontSize: "1rem",
                       fontWeight: "500",
                       color: "#f7faf8",
                       marginLeft: "10px",
@@ -309,8 +308,8 @@ function App() {
                   variant="body2"
                   sx={{
                     color: "#f7faf8",
-                    fontSize: "0.7em",
-                    paddingTop: "20px",
+                    fontSize: "0.6em",
+                    paddingTop: "10px",
                   }}
                 >
                   Atualizado:{" "}
@@ -330,14 +329,14 @@ function App() {
                 </Typography>
                 <Typography
                   variant="body2"
-                  sx={{ color: "#f7faf8", fontSize: "0.7em" }}
+                  sx={{ color: "#f7faf8", fontSize: "0.6em", }}
                 >
                   Duração:{" "}
                   {apiStatus[apiNames[index]]?.responseTime || "N/A"} ms
                 </Typography>
                 <Typography
                   variant="body2"
-                  sx={{ color: "#f7faf8", fontSize: "0.7em" }}
+                  sx={{ color: "#f7faf8", fontSize: "0.6em", }}
                 >
                   Status:{" "} 
                   {apiStatus[apiNames[index]]?.status || "Desconhecido"}
@@ -346,8 +345,8 @@ function App() {
                   variant="body2"
                   sx={{
                     color: "#f7faf8",
-                    fontSize: "0.7em",
-                    paddingBottom: "20px",
+                    fontSize: "0.6em",
+                    paddingBottom: "10px",
                   }}
                 >
                   Disponibilidade:{" "}
@@ -359,8 +358,8 @@ function App() {
                     marginTop: "auto",
                     display: "flex",
                     flexDirection: "column",
-                    gap: "10px",
                     width: "100%",
+                    gap: "8px",
                     justifyContent: "center",
                   }}
                 >
@@ -374,7 +373,7 @@ function App() {
                       fontWeight: "500",
                       borderRadius: "20px",
                       padding: "6px 30px",
-                      fontSize: "0.8rem",
+                      fontSize: "0.7rem",
                       letterSpacing: "0.03rem",
                       boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
                       "&:hover": {
@@ -393,7 +392,7 @@ function App() {
                       fontWeight: "500",
                       borderRadius: "20px",
                       padding: "6px 30px",
-                      fontSize: "0.8rem",
+                      fontSize: "0.7rem",
                       letterSpacing: "0.03rem",
                       boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
                       "&:hover": {
@@ -414,7 +413,7 @@ function App() {
                       fontWeight: "500",
                       borderRadius: "20px",
                       padding: "6px 30px",
-                      fontSize: "0.8rem",
+                      fontSize: "0.7rem",
                       letterSpacing: "0.03rem",
                       boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
                       "&:hover": {
@@ -442,7 +441,7 @@ function App() {
               position: "fixed",
               bottom: "20px",
               right: "20px",
-              backgroundColor: "#616161",
+              backgroundColor: "#757575",
               color: "#ffffff",
               "&:hover": {
                 backgroundColor: "#424242",
