@@ -119,10 +119,10 @@ function ApiDetails({ apiUrl, apiName }) {
                 }),
                 borderColor: chartType === 'line'
                     ? filteredLogs.map((log) =>
-                          log.status_code >= 400 && log.status_code < 600
-                              ? 'rgba(255, 99, 132, 1)'
-                              : 'rgba(75, 192, 192, 1)'
-                      )
+                        log.status_code >= 400 && log.status_code < 600
+                            ? 'rgba(255, 99, 132, 1)'
+                            : 'rgba(75, 192, 192, 1)'
+                    )
                     : undefined,
                 backgroundColor: filteredLogs.map((log) =>
                     log.status_code >= 400 && log.status_code < 600
@@ -162,7 +162,12 @@ function ApiDetails({ apiUrl, apiName }) {
     return (
         <ThemeProvider theme={darkTheme}>
             <CssBaseline />
-            <Container sx={{ padding: '20px', backgroundColor: '#1d1d1d', minHeight: '50vh' }}>
+            <Container sx={{
+                padding: '20px', backgroundColor: "#242436", minHeight: '50vh', borderRadius: "25px", boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+                "&:hover": {
+                    boxShadow: "0 6px 15px rgba(0, 0, 0, 0.7)",
+                },
+            }}>
                 <Typography variant="h5" gutterBottom>
                     Monitoramento da API: {apiName}
                 </Typography>

@@ -30,7 +30,7 @@ import Seta from "./Imagens/Seta.png";
 
 // Lista de URLs das APIs
 const apiUrls = [
-  "https://jsonplaceholder.typicode.com/posts", 
+  "https://jsonplaceholder.typicode.com/posts",
   "https://jsonplaceholder.typicode.com/comments",
   "https://jsonplaceholder.typicode.com/albums",
   "https://jsonplaceholder.typicode.com/photos",
@@ -172,8 +172,8 @@ function App() {
 
       resposta.forEach(element => {
         if (statusUpdates[element.codigo_banco]) {
-              statusUpdates[element.codigo_banco].successPercentage = element.error_percentage; 
-            }
+          statusUpdates[element.codigo_banco].successPercentage = element.error_percentage;
+        }
       });
       setApiStatus(statusUpdates);
     };
@@ -287,7 +287,7 @@ function App() {
                 </Typography>
               </div>
 
-              <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em", paddingTop: "20px"}}>
+              <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em", paddingTop: "20px" }}>
                 <strong>Atualizado:</strong>{" "}
                 {apiStatus[apiNames[index]]?.lastCommunication
                   ? new Date(apiStatus[apiNames[index]].lastCommunication).toLocaleString("pt-BR", {
@@ -302,13 +302,13 @@ function App() {
                   : "N/A"}
               </Typography>
               <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em" }}>
-              <strong>Duração: </strong>{apiStatus[apiNames[index]]?.responseTime || "N/A"} ms
+                <strong>Duração: </strong>{apiStatus[apiNames[index]]?.responseTime || "N/A"} ms
               </Typography>
-              <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em"}}>
-              <strong>Status: </strong>{apiStatus[apiNames[index]]?.status || "Desconhecido"}
+              <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em" }}>
+                <strong>Status: </strong>{apiStatus[apiNames[index]]?.status || "Desconhecido"}
               </Typography>
-              <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em", paddingBottom:"20px"}}>
-              <strong>Disponibilidade: </strong>{apiStatus[apiNames[index]]?.successPercentage || "0"}%
+              <Typography variant="body2" sx={{ color: "#f7faf8", fontSize: "0.7em", paddingBottom: "20px" }}>
+                <strong>Disponibilidade: </strong>{apiStatus[apiNames[index]]?.successPercentage || "0"}%
               </Typography>
 
               <div
@@ -403,7 +403,7 @@ function App() {
             },
           }}
         >
-       <img src={Seta} alt="Scroll to top" width="25" height="25" />
+          <img src={Seta} alt="Scroll to top" width="25" height="25" />
         </IconButton>
       )}
 
@@ -421,17 +421,20 @@ function App() {
       <div ref={logsRef} style={{ marginTop: "40px" }}>
         <Typography
           variant="h5"
-          sx={{ color: "#f44336", marginBottom: "20px" }}
+          sx={{ color: "#ffff", marginBottom: "10px" }}
         >
           Detalhamento de erros
         </Typography>
         <TableContainer
           component={Paper}
           sx={{
-            backgroundColor: "#1d1d1d",
+            backgroundColor: "#242436",
             color: "#f7faf8",
             borderRadius: "10px",
             boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+            "&:hover": {
+              boxShadow: "0 6px 15px rgba(0, 0, 0, 0.7)",
+            },
           }}
         >
           <Table>
