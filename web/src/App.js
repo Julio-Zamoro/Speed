@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
-import { BarChart } from '@mui/icons-material';
-import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+import { BarChart } from "@mui/icons-material";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 
 import {
   Container,
@@ -18,7 +18,8 @@ import {
 import ApiDetails from "./ApiDetails";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import IconButton from "@mui/material/IconButton";
-import "@fontsource/montserrat"
+import ViewListIcon from "@mui/icons-material/ViewList";
+import "@fontsource/montserrat";
 import axios from "axios";
 
 // Importar a logo principal e as logos das APIs
@@ -32,6 +33,7 @@ import LogoSantander from "./Imagens/LogoSantander 1.png";
 import LogoBanrisul from "./Imagens/LogoBanrisul 1.png";
 import LogoInter from "./Imagens/LogoInter 1.png";
 import Seta from "./Imagens/Seta.png";
+import Publicidade from "./Imagens/Publicidade.png";
 
 // Lista de URLs das APIs
 const apiUrls = [
@@ -92,7 +94,7 @@ function App() {
   useEffect(() => {
     // Verificar a posição da rolagem da página
     const handleScroll = () => {
-      if (window.scrollY > 300) {
+      if (window.scrollY > 30) {
         setShowScrollToTop(true);
       } else {
         setShowScrollToTop(false);
@@ -220,7 +222,7 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <Container
-        sx={{ padding: "20px", minHeight: "100vh", backgroundColor: "#090B1E"}}
+        sx={{ padding: "20px", minHeight: "100vh", backgroundColor: "#090B1E" }}
       >
         <div
           style={{
@@ -243,7 +245,7 @@ function App() {
             variant="h4"
             sx={{
               color: "#f7faf8",
-              fontWeight:"bold",
+              fontWeight: "bold",
               fontSize: "2rem",
               "@media (max-width: 600px)": {
                 fontSize: "1.5rem",
@@ -332,17 +334,16 @@ function App() {
                 </Typography>
                 <Typography
                   variant="body2"
-                  sx={{ color: "#f7faf8", fontSize: "0.6em", }}
+                  sx={{ color: "#f7faf8", fontSize: "0.6em" }}
                 >
-                  Duração:{" "}
-                  {apiStatus[apiNames[index]]?.responseTime || "N/A"} ms
+                  Duração: {apiStatus[apiNames[index]]?.responseTime || "N/A"}{" "}
+                  ms
                 </Typography>
                 <Typography
                   variant="body2"
-                  sx={{ color: "#f7faf8", fontSize: "0.6em", }}
+                  sx={{ color: "#f7faf8", fontSize: "0.6em" }}
                 >
-                  Status:{" "} 
-                  {apiStatus[apiNames[index]]?.status || "Desconhecido"}
+                  Status: {apiStatus[apiNames[index]]?.status || "Desconhecido"}
                 </Typography>
                 <Typography
                   variant="body2"
@@ -366,66 +367,65 @@ function App() {
                     justifyContent: "center",
                   }}
                 >
-                  
                   <Button
-  variant="contained"
-  color="primary"
-  onClick={() => handleMonitorClick(url, apiNames[index])}
-  sx={{
-    backgroundColor: "#757575",
-    color: "white",
-    fontWeight: "500",
-    borderRadius: "20px",
-    padding: "6px 30px",
-    fontSize: "0.7rem",
-    letterSpacing: "0.03rem",
-    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
-    position: "relative", // Torna o botão o contexto de referência
-    "&:hover": {
-      backgroundColor: "#616161",
-    },
-  }}
->
-  Gráfico
-  <BarChart
-    sx={{
-      fontSize: 31,
-      position: "absolute", // Posiciona o ícone fora do fluxo normal
-      right: "2px",
-      top: "50%", // Centraliza verticalmente
-      transform: "translateY(-50%)", // Corrige o alinhamento vertical
-    }}
-  />
-</Button>
-<Button
-  variant="contained"
-  onClick={handleLogsClick}
-  sx={{
-    backgroundColor: "#757575",
-    color: "white",
-    fontWeight: "500",
-    borderRadius: "20px",
-    padding: "6px 30px", // Ajuste de padding para ficar semelhante
-    fontSize: "0.7rem",
-    letterSpacing: "0.03rem",
-    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
-    position: "relative", // Para usar o ícone posicionado de forma absoluta
-    "&:hover": {
-      backgroundColor: "#616161",
-    },
-  }}
->
-  Tabela de erros
-  <WarningAmberIcon
-    sx={{
-      fontSize: 25, // Ajuste no tamanho do ícone
-      position: "absolute", // Posiciona o ícone fora do fluxo normal
-      right: "5px", // Ajusta a posição do ícone para a borda direita do botão
-      top: "50%", // Centraliza verticalmente
-      transform: "translateY(-50%)", // Corrige o alinhamento vertical
-    }}
-  />
-</Button>
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleMonitorClick(url, apiNames[index])}
+                    sx={{
+                      backgroundColor: "#757575",
+                      color: "white",
+                      fontWeight: "500",
+                      borderRadius: "20px",
+                      padding: "6px 30px",
+                      fontSize: "0.7rem",
+                      letterSpacing: "0.03rem",
+                      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+                      position: "relative", // Torna o botão o contexto de referência
+                      "&:hover": {
+                        backgroundColor: "#616161",
+                      },
+                    }}
+                  >
+                    Gráfico
+                    <BarChart
+                      sx={{
+                        fontSize: 31,
+                        position: "absolute", // Posiciona o ícone fora do fluxo normal
+                        right: "2px",
+                        top: "50%", // Centraliza verticalmente
+                        transform: "translateY(-50%)", // Corrige o alinhamento vertical
+                      }}
+                    />
+                  </Button>
+                  <Button
+                    variant="contained"
+                    onClick={handleLogsClick}
+                    sx={{
+                      backgroundColor: "#757575",
+                      color: "white",
+                      fontWeight: "500",
+                      borderRadius: "20px",
+                      padding: "6px 30px", // Ajuste de padding para ficar semelhante
+                      fontSize: "0.7rem",
+                      letterSpacing: "0.03rem",
+                      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+                      position: "relative", // Para usar o ícone posicionado de forma absoluta
+                      "&:hover": {
+                        backgroundColor: "#616161",
+                      },
+                    }}
+                  >
+                    Tabela de erros
+                    <ViewListIcon
+                      sx={{
+                        fontSize: 25, // Ajuste no tamanho do ícone
+                        position: "absolute", // Posiciona o ícone fora do fluxo normal
+                        right: "5px", // Ajusta a posição do ícone para a borda direita do botão
+                        top: "50%", // Centraliza verticalmente
+                        transform: "translateY(-50%)", // Corrige o alinhamento vertical
+                      }}
+                    />
+                  </Button>
 
                   <Button
                     variant="contained"
@@ -485,9 +485,33 @@ function App() {
             ></Typography>
             <ApiDetails apiUrl={selectedApi.url} apiName={selectedApi.name} />
           </div>
-        )}
+        )} 
+        <div
+          style={{
+            width: "100%",
+            marginTop: "20px",
+            textAlign: "center",
+          }}
+        >
+          <a
+            href="https://tecnospeed.com.br/plugbank/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src={Publicidade}
+              alt="Publicidade"
+              style={{
+                width: "100%",
+                height: "120px",
+                cursor: "pointer",
+                borderRadius: "10px",
+              }}
+            />
+          </a>
+        </div>
 
-        <div ref={logsRef} style={{ marginTop: "40px" }}>
+        <div ref={logsRef} style={{ marginTop: "20px" }}>
           <Typography
             variant="h5"
             sx={{ color: "#ffff", marginBottom: "10px" }}
