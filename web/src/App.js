@@ -1,4 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
+import { BarChart } from '@mui/icons-material';
+import WarningAmberIcon from '@mui/icons-material/WarningAmber';
+
 import {
   Container,
   Grid,
@@ -363,45 +366,67 @@ function App() {
                     justifyContent: "center",
                   }}
                 >
+                  
                   <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handleMonitorClick(url, apiNames[index])}
-                    sx={{
-                      backgroundColor: "#757575",
-                      color: "white",
-                      fontWeight: "500",
-                      borderRadius: "20px",
-                      padding: "6px 30px",
-                      fontSize: "0.7rem",
-                      letterSpacing: "0.03rem",
-                      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
-                      "&:hover": {
-                        backgroundColor: "#616161",
-                      },
-                    }}
-                  >
-                    Gráfico
-                  </Button>
-                  <Button
-                    variant="contained"
-                    onClick={handleLogsClick}
-                    sx={{
-                      backgroundColor: "#757575",
-                      color: "white",
-                      fontWeight: "500",
-                      borderRadius: "20px",
-                      padding: "6px 30px",
-                      fontSize: "0.7rem",
-                      letterSpacing: "0.03rem",
-                      boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
-                      "&:hover": {
-                        backgroundColor: "#616161",
-                      },
-                    }}
-                  >
-                    Tabela de erros
-                  </Button>
+  variant="contained"
+  color="primary"
+  onClick={() => handleMonitorClick(url, apiNames[index])}
+  sx={{
+    backgroundColor: "#757575",
+    color: "white",
+    fontWeight: "500",
+    borderRadius: "20px",
+    padding: "6px 30px",
+    fontSize: "0.7rem",
+    letterSpacing: "0.03rem",
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+    position: "relative", // Torna o botão o contexto de referência
+    "&:hover": {
+      backgroundColor: "#616161",
+    },
+  }}
+>
+  Gráfico
+  <BarChart
+    sx={{
+      fontSize: 31,
+      position: "absolute", // Posiciona o ícone fora do fluxo normal
+      right: "2px",
+      top: "50%", // Centraliza verticalmente
+      transform: "translateY(-50%)", // Corrige o alinhamento vertical
+    }}
+  />
+</Button>
+<Button
+  variant="contained"
+  onClick={handleLogsClick}
+  sx={{
+    backgroundColor: "#757575",
+    color: "white",
+    fontWeight: "500",
+    borderRadius: "20px",
+    padding: "6px 30px", // Ajuste de padding para ficar semelhante
+    fontSize: "0.7rem",
+    letterSpacing: "0.03rem",
+    boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+    position: "relative", // Para usar o ícone posicionado de forma absoluta
+    "&:hover": {
+      backgroundColor: "#616161",
+    },
+  }}
+>
+  Tabela de erros
+  <WarningAmberIcon
+    sx={{
+      fontSize: 25, // Ajuste no tamanho do ícone
+      position: "absolute", // Posiciona o ícone fora do fluxo normal
+      right: "5px", // Ajusta a posição do ícone para a borda direita do botão
+      top: "50%", // Centraliza verticalmente
+      transform: "translateY(-50%)", // Corrige o alinhamento vertical
+    }}
+  />
+</Button>
+
                   <Button
                     variant="contained"
                     sx={{
