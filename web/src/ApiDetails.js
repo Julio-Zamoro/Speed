@@ -153,7 +153,16 @@ function ApiDetails({ apiUrl, apiName }) {
             legend: { labels: { color: '#ffffff' } },
             tooltip: {
                 callbacks: {
-                    label: (tooltipItem) => `Tempo: ${tooltipItem.raw} ms` || 'Erro',
+                    label: (tooltipItem) => {
+                        const log = filteredLogs[tooltipItem.dataIndex]; // Acessando o log correspondente ao ponto do gráfico
+                        const date = new Date(log.data_requisicao);
+                        const formattedDate = `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
+                        return [
+                            `Data: ${formattedDate}`,
+                            `Tempo: ${tooltipItem.raw} ms`,
+                            `Status: ${log.status_code}`,
+                        ];
+                    },
                 },
             },
         },
