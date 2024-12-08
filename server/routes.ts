@@ -5,8 +5,8 @@ export const routes = Router()
 const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
-    database: 'postgres',
-    password: '123',
+    database: 'poggers',
+    password: 'naka',
     port: 5432,
 });
 
@@ -59,10 +59,10 @@ routes.get('/logs', async (req, res) => {
 
 // Endpoint para buscar logs por URL da API
 routes.get('/api/logs/rota/:apiUrl', async (req, res) => {
-    const apiUrl = decodeURIComponent(req.params.apiUrl); // Decodifica a URL recebida
+    const apiUrl = req.params.apiUrl; // Decodifica a URL recebida
     console.log(`Fetching logs for: ${apiUrl}`); // Log para depuração
-
-    const queryLogs = 'SELECT * FROM api_logs WHERE url = $1 ORDER BY data_requisicao DESC';
+    
+    const queryLogs = 'SELECT * FROM api_logs WHERE codigo_banco = $1 ORDER BY data_requisicao DESC';
     const queryStats = `
         SELECT
             COUNT(*) AS total_requests,
@@ -70,7 +70,7 @@ routes.get('/api/logs/rota/:apiUrl', async (req, res) => {
         FROM
             api_logs
         WHERE
-            url = $1
+            codigo_banco = $1
     `;
 
     try {
