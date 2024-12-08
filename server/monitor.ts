@@ -23,8 +23,8 @@ app.use(cors());
 const pool = new Pool({
   user: "postgres",
   host: process.env.HOST,
-  database: "poggers",
-  password: "naka",
+  database: "postgres",
+  password: "123",
   port: 5432,
 });
 
@@ -66,13 +66,23 @@ async function checkApiStatus(apiUrl) {
   const codigo_banco = apiCodes[apiUrl] || "N/A";
   const tempoInicio = Date.now();
 
+  const now = new Date();
+  const ano = now.getFullYear();
+  const mes = now.getMonth() + 1;
+  const dia = now.getDate();
+  const hora = now.getHours();
+  const minuto = now.getMinutes();
+
   console.log(`URL: ${apiUrl} | Código do Banco: ${codigo_banco}`);
   try {
     const response = await axios.get(apiUrl);
     const tempoRequisicao = Date.now() - tempoInicio;
 
     await pool.query(
-      "INSERT INTO api_logs (tipo_registro, codigo_banco, status_code, data_requisicao, tempo_requisicao, resposta, url) VALUES ($1, $2, $3, $4, $5, $6, $7)",
+      `INSERT INTO api_logs (
+        tipo_registro, codigo_banco, status_code, data_requisicao, tempo_requisicao, 
+        resposta, url, ano, mes, dia, hora, minuto
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
       [
         tipo_registro,
         codigo_banco,
@@ -81,6 +91,11 @@ async function checkApiStatus(apiUrl) {
         tempoRequisicao,
         JSON.stringify(response.data),
         apiUrl,
+        ano,
+        mes,
+        dia,
+        hora,
+        minuto,
       ]
     );
   } catch (error) {
@@ -113,17 +128,24 @@ async function checkApiStatus(apiUrl) {
 
     // Adicionando a URL na inserção do log de erro
     await pool.query(
-      "INSERT INTO api_logs (tipo_registro, codigo_banco, status_code, data_requisicao, tempo_requisicao, resposta, mensagem_erro, url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
+      `INSERT INTO api_logs (
+        tipo_registro, codigo_banco, status_code, data_requisicao, tempo_requisicao, 
+        resposta, url, ano, mes, dia, hora, minuto
+      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
       [
         tipo_registro,
         codigo_banco,
-        statusCode,
+        response.status,
         created_at,
         tempoRequisicao,
-        JSON.stringify({ error: errorMessage }),
-        errorMessage,
+        JSON.stringify( {error: errorMessage} ),
         apiUrl,
-      ] // Incluindo apiUrl aqui
+        ano,
+        mes,
+        dia,
+        hora,
+        minuto,
+      ]
     );
   }
 }
