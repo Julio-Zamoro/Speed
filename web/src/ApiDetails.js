@@ -220,7 +220,7 @@ function ApiDetails({ apiUrl, apiName }) {
         {stats && (
           <Typography variant="body2" color="textSecondary" gutterBottom>
             Taxa de Sucesso: {stats.successPercentage}% | Total de Requisições:{" "}
-            {stats.totalRequests} | Erros 404: {stats.total404}
+            {stats.totalRequests}
           </Typography>
         )}
         </div>
