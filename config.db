@@ -15,9 +15,14 @@ CREATE TABLE api_logs (
     status_code INTEGER NOT NULL,
     data_requisicao TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     tempo_requisicao INTERVAL NOT NULL,
-    resposta JSONB NOT null,
-    mensagem_erro text,
-   	url TEXT
+    resposta JSONB NOT NULL,
+    mensagem_erro TEXT,
+    url TEXT,
+    ano INT,
+    mes INT,
+    dia INT,
+    hora INT,
+    minuto INT
 );
 
 
