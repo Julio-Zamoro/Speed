@@ -200,12 +200,16 @@ function App() {
 
   const handleMonitorClick = (url, name) => {
     setSelectedApi({ url, name });
+    console.log('o nome ', name)
+    const teste = errors.filter(e => e.codigo_banco === name)
+    setErrors(teste)
     setTimeout(() => {
       detailsRef.current.scrollIntoView({ behavior: "smooth" });
     }, 100);
   };
 
-  const handleLogsClick = () => {
+  const handleLogsClick = (banco) => {
+    setErrors(errors.filter(e => e.codigo_banco === banco))
     logsRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -399,7 +403,7 @@ function App() {
                   </Button>
                   <Button
                     variant="contained"
-                    onClick={handleLogsClick}
+                    onClick={() => handleLogsClick(apiNames[index])}
                     sx={{
                       backgroundColor: "#757575",
                       color: "white",

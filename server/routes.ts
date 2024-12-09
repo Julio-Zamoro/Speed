@@ -5,8 +5,8 @@ export const routes = Router()
 const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
-    database: 'poggers',
-    password: 'naka',
+    database: 'postgres',
+    password: '123',
     port: 5432,
 });
 

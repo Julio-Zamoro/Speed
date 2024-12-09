@@ -180,8 +180,6 @@ async function checkAllApis() {
 
       var mentir = Date.now() - tempoInicio;
 
-      console.log("mentiras foram contadas", mentir);
-
       await pool.query(
         "INSERT INTO api_logs (tipo_registro, codigo_banco, status_code, data_requisicao, tempo_requisicao, resposta, url) VALUES ($1, $2, $3, $4, $5, $6, $7)",
         [
@@ -286,7 +284,7 @@ async function checkAllApis() {
 
 AppDataSource.initialize()
   .then(async () => {
-    cron.schedule("*/30 * * * * *", () => {
+    cron.schedule("*/5 * * * * *", () => {
       console.log("Verificando o status das APIs...");
       checkAllApis();
     });

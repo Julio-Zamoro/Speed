@@ -97,6 +97,7 @@ function ApiDetails({ apiUrl, apiName }) {
 
   const filterLogs = (logs) => {
     const now = new Date();
+    
     const timeDurations = {
       last12h: 12 * 60 * 60 * 1000,
       last24h: 24 * 60 * 60 * 1000,
