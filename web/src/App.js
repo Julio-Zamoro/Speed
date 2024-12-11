@@ -200,16 +200,17 @@ function App() {
 
   const handleMonitorClick = (url, name) => {
     setSelectedApi({ url, name });
-    console.log('o nome ', name)
-    const teste = errors.filter(e => e.codigo_banco === name)
-    setErrors(teste)
+    const filteredErrors = errors.filter((e) => e.codigo_banco === name);
+    setFilteredErrors(filteredErrors); // Atualiza os erros filtrados
     setTimeout(() => {
       detailsRef.current.scrollIntoView({ behavior: "smooth" });
     }, 100);
   };
+  const [filteredErrors, setFilteredErrors] = useState([]); // Para armazenar os erros filtrados
 
   const handleLogsClick = (banco) => {
-    setErrors(errors.filter(e => e.codigo_banco === banco))
+    const filtered = errors.filter((e) => e.codigo_banco === banco);
+    setFilteredErrors(filtered); // Atualiza os erros filtrados
     logsRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -489,7 +490,7 @@ function App() {
             ></Typography>
             <ApiDetails apiUrl={selectedApi.url} apiName={selectedApi.name} />
           </div>
-        )} 
+        )}
         <div
           style={{
             width: "100%",
@@ -576,22 +577,33 @@ function App() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {errors.slice(-10).map((error, index) => (
-                  <TableRow key={index}>
-                    <TableCell sx={{ color: "#f7faf8" }}>
-                      {error.codigo_banco}
-                    </TableCell>
-                    <TableCell sx={{ color: "#FF0000" }}>
-                      {error.status_code}
-                    </TableCell>
-                    <TableCell sx={{ color: "#f7faf8" }}>
-                      {formatDate(error.data_requisicao)}
-                    </TableCell>
-                    <TableCell sx={{ color: "#f7faf8" }}>
-                      {error.mensagem_erro}
+                {filteredErrors.length > 0 ? (
+                  filteredErrors.slice(-10).map((error, index) => (
+                    <TableRow key={index}>
+                      <TableCell sx={{ color: "#f7faf8" }}>
+                        {error.codigo_banco}
+                      </TableCell>
+                      <TableCell sx={{ color: "#FF0000" }}>
+                        {error.status_code}
+                      </TableCell>
+                      <TableCell sx={{ color: "#f7faf8" }}>
+                        {formatDate(error.data_requisicao)}
+                      </TableCell>
+                      <TableCell sx={{ color: "#f7faf8" }}>
+                        {error.mensagem_erro}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell
+                      colSpan={4}
+                      sx={{ color: "#f7faf8", textAlign: "center" }}
+                    >
+                      Nenhum erro encontrado para este banco.
                     </TableCell>
                   </TableRow>
-                ))}
+                )}
               </TableBody>
             </Table>
           </TableContainer>
