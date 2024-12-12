@@ -61,12 +61,13 @@ const darkTheme = createTheme({
 
 function ApiDetails({ apiUrl, apiName }) {
   const [logs, setLogs] = useState([]);
-  const [stats, setStats] = useState(null); // Novo estado para as estatísticas
+  const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [timeFilter, setTimeFilter] = useState("last24h");
   const [selectedDatabase, setSelectedDatabase] = useState("Database1");
   const [chartType, setChartType] = useState("line");
+  const [request, setRequest] = useState("POST");
 
   const toggleChartType = () => {
     setChartType((prevType) => (prevType === "line" ? "bar" : "line"));
@@ -97,7 +98,7 @@ function ApiDetails({ apiUrl, apiName }) {
 
   const filterLogs = (logs) => {
     const now = new Date();
-    
+
     const timeDurations = {
       last12h: 12 * 60 * 60 * 1000,
       last24h: 24 * 60 * 60 * 1000,
@@ -106,7 +107,7 @@ function ApiDetails({ apiUrl, apiName }) {
     };
     const filterTime = timeDurations[timeFilter];
     return logs.filter(
-      (log) => new Date(log.data_requisicao) > new Date(now - filterTime)
+      (log) => new Date(log.data_requisicao) > new Date(now - filterTime) && log.tipo_registro===request
     );
   };
 
@@ -227,45 +228,65 @@ function ApiDetails({ apiUrl, apiName }) {
         </div>
 
         <div
-          style={{
+            style={{
+              display: "flex",
+              marginBottom: "10px",
+              width: "100%",
+              maxHeight: "30px",
+              marginLeft: "10px",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "10px",
+            }}
+        >
+          <div style={{
             display: "flex",
             marginBottom: "10px",
             width: "100%",
             maxHeight: "30px",
-            marginLeft: "10px",
-          }}
-          >
-          <Select
-            value={timeFilter}
-            onChange={(e) => setTimeFilter(e.target.value)}
-            displayEmpty
-            inputProps={{ "aria-label": "Filtro de Tempo" }}
-            style={{ color: "#ffffff" }}
-          >
-            <MenuItem value="last12h">Últimas 12 horas</MenuItem>
-            <MenuItem value="last24h">Últimas 24 horas</MenuItem>
-            <MenuItem value="last7d">Últimos 7 dias</MenuItem>
-            <MenuItem value="last30d">Últimos 30 dias</MenuItem>
-          </Select>
-        
-        <Button variant="contained" color="primary" onClick={toggleChartType} style={{marginLeft: "10px"}}>
-          Tipo do gráfico
-        </Button>
+            gap: "10px"
+            }}>
+            <Select
+                value={timeFilter}
+                onChange={(e) => setTimeFilter(e.target.value)}
+                displayEmpty
+                inputProps={{"aria-label": "Filtro de Tempo"}}
+                style={{color: "#ffffff"}}
+            >
+              <MenuItem value="last12h">Últimas 12 horas</MenuItem>
+              <MenuItem value="last24h">Últimas 24 horas</MenuItem>
+              <MenuItem value="last7d">Últimos 7 dias</MenuItem>
+              <MenuItem value="last30d">Últimos 30 dias</MenuItem>
+            </Select>
+
+            <Select
+                value={request}
+                onChange={(e) => setRequest(e.target.value)}
+            >
+              <MenuItem value="POST">REGISTRO</MenuItem>
+              <MenuItem value="GET">CONSULTA</MenuItem>
+            </Select>
+          
+
+          <Button variant="contained" color="primary" onClick={toggleChartType}>
+            Tipo do gráfico
+          </Button>
+          </div>
         </div>
         {loading ? (
-          <CircularProgress color="inherit" />
+            <CircularProgress color="inherit"/>
         ) : error ? (
-          <Typography variant="body1" color="error">
-            {`Erro ao buscar dados: ${error}`}
-          </Typography>
+            <Typography variant="body1" color="error">
+              {`Erro ao buscar dados: ${error}`}
+            </Typography>
         ) : filteredLogs.length === 0 ? (
-          <Typography variant="body1" color="secondary">
-            Nenhum dado disponível para o período selecionado.
-          </Typography>
+            <Typography variant="body1" color="secondary">
+              Nenhum dado disponível para o período selecionado.
+            </Typography>
         ) : chartType === "line" ? (
-          <Line data={data} options={chartOptions} />
+            <Line data={data} options={chartOptions}/>
         ) : (
-          <Bar data={data} options={chartOptions} />
+            <Bar data={data} options={chartOptions}/>
         )}
       </Container>
     </ThemeProvider>
