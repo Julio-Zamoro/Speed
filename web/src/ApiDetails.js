@@ -75,10 +75,6 @@ function ApiDetails({ apiUrl, apiName }) {
     setChartType((prevType) => (prevType === "line" ? "bar" : "line"));
   };
 
-  const handleChartTypeChange = (event) => {
-    setChartType(event.target.value);
-  };
-
   useEffect(() => {
     const fetchLogs = async () => {
       setLoading(true);
