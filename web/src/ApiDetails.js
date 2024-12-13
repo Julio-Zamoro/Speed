@@ -215,10 +215,10 @@ function ApiDetails({ apiUrl, apiName }) {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            marginBottom: "16px",
+            marginBottom: "10px",
           }}
         >
-          <Typography variant="h5" gutterBottom>
+          <Typography variant="h5" gutterBottom sx={{ fontSize: "1.5em" }}>
             Monitoramento da API: {apiName}
           </Typography>
           {stats && (
@@ -232,7 +232,6 @@ function ApiDetails({ apiUrl, apiName }) {
         <div
           style={{
             display: "flex",
-            marginBottom: "10px",
             width: "100%",
             maxHeight: "30px",
             marginLeft: "10px",
@@ -290,7 +289,7 @@ function ApiDetails({ apiUrl, apiName }) {
                 fontSize: "0.8em"
               }}
             >
-              {chartType === "line" ? "Linha" : "Barra"}
+              {chartType === "line" ? "Gráfico de Linha" : "Gráfico de Barra"}
 
             </Button>
           </div>
