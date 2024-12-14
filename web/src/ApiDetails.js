@@ -8,7 +8,7 @@ import {
   Select,
   Button,
   ToggleButton,
-  ToggleButtonGroup
+  ToggleButtonGroup,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Line, Bar } from "react-chartjs-2";
@@ -109,7 +109,9 @@ function ApiDetails({ apiUrl, apiName }) {
     };
     const filterTime = timeDurations[timeFilter];
     return logs.filter(
-      (log) => new Date(log.data_requisicao) > new Date(now - filterTime) && log.tipo_registro === request
+      (log) =>
+        new Date(log.data_requisicao) > new Date(now - filterTime) &&
+        log.tipo_registro === request
     );
   };
 
@@ -134,18 +136,18 @@ function ApiDetails({ apiUrl, apiName }) {
           const tempoMs =
             typeof log.tempo_requisicao === "object"
               ? (log.tempo_requisicao.minutes * 60 +
-                log.tempo_requisicao.seconds) *
-              1000
+                  log.tempo_requisicao.seconds) *
+                1000
               : log.tempo_requisicao * 1000;
           return isNaN(tempoMs) || tempoMs <= 0 ? null : tempoMs;
         }),
         borderColor:
           chartType === "line"
             ? filteredLogs.map((log) =>
-              log.status_code >= 400 && log.status_code < 600
-                ? "rgba(255, 99, 132, 1)"
-                : "rgba(75, 192, 192, 1)"
-            )
+                log.status_code >= 400 && log.status_code < 600
+                  ? "rgba(255, 99, 132, 1)"
+                  : "rgba(75, 192, 192, 1)"
+              )
             : undefined,
         backgroundColor: filteredLogs.map((log) =>
           log.status_code >= 400 && log.status_code < 600
@@ -218,35 +220,43 @@ function ApiDetails({ apiUrl, apiName }) {
             marginBottom: "10px",
           }}
         >
-          <Typography variant="h5" gutterBottom sx={{ fontSize: "1.5em" }}>
+          <Typography
+            variant="h5"
+            gutterBottom
+            sx={{
+              fontSize: {
+                xs: "1.0em",
+                sm: "1.5em",
+                md: "1.8em",
+              },
+            }}
+          >
             Monitoramento da API: {apiName}
           </Typography>
-          {stats && (
-            <Typography variant="body2" color="textSecondary" gutterBottom>
-              Total de Requisições:{" "}
-              {stats.totalRequests}
-            </Typography>
-          )}
         </div>
 
         <div
-          style={{
+          sx={{
             display: "flex",
             width: "100%",
+            flexWrap: "wrap",
+            gap: "10px",
             maxHeight: "30px",
             marginLeft: "10px",
             alignItems: "center",
             justifyContent: "space-between",
-
+            textAlign: "center",
+            marginBottom: { xs: "60px", sm: "0px" },
           }}
         >
-          <div style={{
-            display: "flex",
-            marginBottom: "10px",
-            width: "100%",
-            maxHeight: "30px",
-            gap: "10px",
-          }}>
+          <div
+            sx={{
+              display: "flex",
+              flexDirection: { xs: "column", sm: "row" },
+              marginBottom: "10px",
+              width: "100%",
+            }}
+          >
             <ToggleButtonGroup
               value={request}
               onChange={(e, newValue) => {
@@ -255,21 +265,50 @@ function ApiDetails({ apiUrl, apiName }) {
                 }
               }}
               exclusive
+              sx={{
+                width: { xs: "100%", sm: "auto" },
+                height: "25px",
+                marginBottom: { xs: "5px" },
+              }}
             >
-              <ToggleButton value="POST" sx={{ textTransform: "none", fontSize: "0.8em" }}>Registro</ToggleButton>
-              <ToggleButton value="GET" sx={{ textTransform: "none", fontSize: "0.8em" }}>Consulta</ToggleButton>
-            
+              <ToggleButton
+                value="POST"
+                sx={{
+                  textTransform: "none",
+                  fontSize: "0.8em",
+                  borderRadius: "20px",
+                }}
+              >
+                Registro
+              </ToggleButton>
+              <ToggleButton
+                value="GET"
+                sx={{
+                  textTransform: "none",
+                  fontSize: "0.8em",
+                  borderRadius: "20px",
+                }}
+              >
+                Consulta
+              </ToggleButton>
             </ToggleButtonGroup>
-
             <Select
               value={timeFilter}
               onChange={(e) => setTimeFilter(e.target.value)}
               displayEmpty
               inputProps={{ "aria-label": "Filtro de Tempo" }}
-              style={{ color: "#ffffff" }}
+              style={{
+                color: "#ffffff",
+                borderRadius: "20px",
+                textAlign: "center",
+              }}
               sx={{
                 textTransform: "none",
-                fontSize: "0.8em"
+                fontSize: "0.8em",
+                width: { xs: "100%", sm: "auto" },
+                height: "25px",
+                marginLeft: { sm: "10px" },
+                marginBottom: { xs: "5px" },
               }}
             >
               <MenuItem value="last12h">Últimas 12 horas</MenuItem>
@@ -277,20 +316,24 @@ function ApiDetails({ apiUrl, apiName }) {
               <MenuItem value="last7d">Últimos 7 dias</MenuItem>
               <MenuItem value="last30d">Últimos 30 dias</MenuItem>
             </Select>
-
-
             <Button
               value={chartType}
               onClick={toggleChartType}
               variant="outlined"
-              style={{ color: "#ffffff", borderColor: "rgba(255, 255, 255, 0.3)" }}
+              style={{
+                color: "#ffffff",
+                borderColor: "rgba(255, 255, 255, 0.3)",
+                borderRadius: "20px",
+              }}
               sx={{
                 textTransform: "none",
-                fontSize: "0.8em"
+                fontSize: "0.8em",
+                width: { xs: "100%", sm: "auto" },
+                height: "25px",
+                marginLeft: { sm: "10px" },
               }}
             >
               {chartType === "line" ? "Gráfico de Linha" : "Gráfico de Barra"}
-
             </Button>
           </div>
         </div>
@@ -304,10 +347,25 @@ function ApiDetails({ apiUrl, apiName }) {
           <Typography variant="body1" color="secondary">
             Nenhum dado disponível para o período selecionado.
           </Typography>
-        ) : chartType === "line" ? (
-          <Line data={data} options={chartOptions} />
         ) : (
-          <Bar data={data} options={chartOptions} />
+          <div
+            style={{
+              overflowX: "auto",
+              paddingBottom: "10px", // Espaço para facilitar o scroll no mobile
+            }}
+          >
+            <div
+              style={{
+                minWidth: "900px",
+              }}
+            >
+              {chartType === "line" ? (
+                <Line data={data} options={chartOptions} />
+              ) : (
+                <Bar data={data} options={chartOptions} />
+              )}
+            </div>
+          </div>
         )}
       </Container>
     </ThemeProvider>

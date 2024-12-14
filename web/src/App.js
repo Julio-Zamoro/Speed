@@ -276,6 +276,7 @@ function App() {
                   padding: "15px",
                   height: "auto",
                   width: "auto",
+                  maxWidth: "500px",
                   backgroundColor: "#242436",
                   borderRadius: "25px",
                   boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
@@ -384,6 +385,7 @@ function App() {
                       padding: "6px 30px",
                       fontSize: "0.7rem",
                       letterSpacing: "0.03rem",
+                      width: "auto",
                       boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
                       position: "relative", // Torna o botão o contexto de referência
                       "&:hover": {
@@ -473,6 +475,7 @@ function App() {
               right: "20px",
               backgroundColor: "#757575",
               color: "#ffffff",
+               boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
               "&:hover": {
                 backgroundColor: "#424242",
               },
