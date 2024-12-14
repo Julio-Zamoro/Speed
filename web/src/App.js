@@ -258,6 +258,9 @@ function App() {
               "@media (max-width: 400px)": {
                 fontSize: "1.2rem",
               },
+              "@media (max-width: 350px)": {
+                fontSize: "1rem",
+              },
             }}
           >
             Monitor de API's
