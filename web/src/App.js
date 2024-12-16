@@ -604,26 +604,26 @@ function App() {
                 </TableRow>
               </TableHead>
               <TableBody>
-              {filteredErrors.length > 0
-  ? filteredErrors.slice(-10).map((error, index) =>
-      error.status_code >= 500 && error.status_code < 600 ? (
-        <TableRow key={index}>
-          <TableCell sx={{ color: "#f7faf8" }}>
-            {error.codigo_banco}
-          </TableCell>
-          <TableCell sx={{ color: "#FF0000" }}>
-            {error.status_code}
-          </TableCell>
-          <TableCell sx={{ color: "#f7faf8" }}>
-            {formatDate(error.data_requisicao)}
-          </TableCell>
-          <TableCell sx={{ color: "#f7faf8" }}>
-            {error.mensagem_erro}
-          </TableCell>
-        </TableRow>
-      ) : null
-    )
-  : undefined}
+                {filteredErrors.length > 0
+                  ? filteredErrors.slice(-10).map((error, index) =>
+                      error.status_code >= 500 && error.status_code < 600 ? (
+                        <TableRow key={index}>
+                          <TableCell sx={{ color: "#f7faf8" }}>
+                            {error.codigo_banco}
+                          </TableCell>
+                          <TableCell sx={{ color: "#FF0000" }}>
+                            {error.status_code}
+                          </TableCell>
+                          <TableCell sx={{ color: "#f7faf8" }}>
+                            {formatDate(error.data_requisicao)}
+                          </TableCell>
+                          <TableCell sx={{ color: "#f7faf8" }}>
+                            {error.mensagem_erro}
+                          </TableCell>
+                        </TableRow>
+                      ) : null
+                    )
+                  : undefined}
 
                 <TableRow>
                   <TableCell
@@ -633,7 +633,6 @@ function App() {
                     Nenhum erro encontrado para este banco.
                   </TableCell>
                 </TableRow>
-                
               </TableBody>
             </Table>
           </TableContainer>
