@@ -137,11 +137,12 @@ function App() {
       );
       const resposta = response.data;
       console.log(response.data);
-      const intuicao = await  axios.get('http://localhost:3001/lastrequest')
+      const intuicao = await axios.get("http://localhost:3001/lastrequest");
       intuicao.data.forEach((item) => {
-        const tempoEmMs = item.tempo_requisicao.minutes * 1000 + item.tempo_requisicao.seconds;
+        const tempoEmMs =
+          item.tempo_requisicao.minutes + item.tempo_requisicao.seconds;
 
-        if(item.status_code === 200) {
+        if ((item.status_code === 200, 400, 401, 403, 422)) {
           statusUpdates[item.codigo_banco] = {
             status: "connected",
             lastCommunication: new Date().toISOString(),
@@ -156,9 +157,9 @@ function App() {
             success: false,
           };
         }
-      })
+      });
       for (let i = 0; i < apiUrls.length; i++) {
-        console.log('isso foi ensinado aos homens: ', apiUrls[i]);
+        console.log("isso foi ensinado aos homens: ", apiUrls[i]);
         const startTime = Date.now();
         try {
           const response = await axios.get(apiUrls[i]);
@@ -498,7 +499,7 @@ function App() {
               right: "20px",
               backgroundColor: "#757575",
               color: "#ffffff",
-               boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
+              boxShadow: "0 4px 10px rgba(0, 0, 0, 0.5)",
               "&:hover": {
                 backgroundColor: "#424242",
               },
@@ -603,33 +604,36 @@ function App() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {filteredErrors.length > 0 ? (
-                  filteredErrors.slice(-10).map((error, index) => (
-                    <TableRow key={index}>
-                      <TableCell sx={{ color: "#f7faf8" }}>
-                        {error.codigo_banco}
-                      </TableCell>
-                      <TableCell sx={{ color: "#FF0000" }}>
-                        {error.status_code}
-                      </TableCell>
-                      <TableCell sx={{ color: "#f7faf8" }}>
-                        {formatDate(error.data_requisicao)}
-                      </TableCell>
-                      <TableCell sx={{ color: "#f7faf8" }}>
-                        {error.mensagem_erro}
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={4}
-                      sx={{ color: "#f7faf8", textAlign: "center" }}
-                    >
-                      Nenhum erro encontrado para este banco.
-                    </TableCell>
-                  </TableRow>
-                )}
+              {filteredErrors.length > 0
+  ? filteredErrors.slice(-10).map((error, index) =>
+      error.status_code >= 500 && error.status_code < 600 ? (
+        <TableRow key={index}>
+          <TableCell sx={{ color: "#f7faf8" }}>
+            {error.codigo_banco}
+          </TableCell>
+          <TableCell sx={{ color: "#FF0000" }}>
+            {error.status_code}
+          </TableCell>
+          <TableCell sx={{ color: "#f7faf8" }}>
+            {formatDate(error.data_requisicao)}
+          </TableCell>
+          <TableCell sx={{ color: "#f7faf8" }}>
+            {error.mensagem_erro}
+          </TableCell>
+        </TableRow>
+      ) : null
+    )
+  : undefined}
+
+                <TableRow>
+                  <TableCell
+                    colSpan={4}
+                    sx={{ color: "#f7faf8", textAlign: "center" }}
+                  >
+                    Nenhum erro encontrado para este banco.
+                  </TableCell>
+                </TableRow>
+                
               </TableBody>
             </Table>
           </TableContainer>

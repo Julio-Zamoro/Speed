@@ -106,16 +106,13 @@ async function checkApiStatus(apiUrl) {
     let errorMessage = "Ocorreu um erro ao tentar acessar a API.";
     if (error.response) {
       switch (statusCode) {
-        case 404:
+        case 500:
           errorMessage =
             "A URL solicitada não foi encontrada. Por favor, verifique se está correta.";
           break;
-        case 500:
+        case 504:
           errorMessage =
             "Houve um erro interno no servidor. Tente novamente mais tarde.";
-          break;
-        case 403:
-          errorMessage = "Acesso negado à API. Verifique suas credenciais.";
           break;
         default:
           errorMessage = `Erro ao conectar à API: ${error.response.status} - ${error.response.statusText}`;
@@ -222,17 +219,11 @@ async function checkAllApis() {
               statusCode = error.response.status;
 
               switch (statusCode) {
-                  case 400:
+                  case 500:
                       errorMessage = "Requisição inválida. Verifique os dados enviados.";
                       break;
-                  case 401:
+                  case 504:
                       errorMessage = "Acesso não autorizado. Verifique suas credenciais.";
-                      break;
-                  case 403:
-                      errorMessage = "Acesso negado à API. Verifique suas permissões.";
-                      break;
-                  case 422:
-                      errorMessage = "Entidade não processável. Verifique os dados enviados.";
                       break;
                   default:
                       console.log('conferencia nominal> ', error.response);

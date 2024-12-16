@@ -144,13 +144,13 @@ function ApiDetails({ apiUrl, apiName }) {
         borderColor:
           chartType === "line"
             ? filteredLogs.map((log) =>
-                log.status_code >= 400 && log.status_code < 600
+                log.status_code >= 500 && log.status_code < 600
                   ? "rgba(255, 99, 132, 1)"
                   : "rgba(75, 192, 192, 1)"
               )
             : undefined,
         backgroundColor: filteredLogs.map((log) =>
-          log.status_code >= 400 && log.status_code < 600
+          log.status_code >= 500 && log.status_code < 600
             ? "rgba(255, 99, 132, 1)"
             : "rgba(75, 192, 192, 1)"
         ),
