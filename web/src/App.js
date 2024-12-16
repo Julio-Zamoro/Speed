@@ -369,12 +369,12 @@ function App() {
                   Duração: {apiStatus[apiNames[index]]?.responseTime || "N/A"}{" "}
                   ms
                 </Typography>
-                <Typography
+                {/* <Typography
                   variant="body2"
                   sx={{ color: "#f7faf8", fontSize: "0.6em" }}
                 >
                   Status: {apiStatus[apiNames[index]]?.status || "Desconhecido"}
-                </Typography>
+                </Typography> */}
                 <Typography
                   variant="body2"
                   sx={{
@@ -572,7 +572,7 @@ function App() {
                       fontSize: "1rem",
                     }}
                   >
-                    Código do Banco
+                    Nome do Banco
                   </TableCell>
                   <TableCell
                     sx={{

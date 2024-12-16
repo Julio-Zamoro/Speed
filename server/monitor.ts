@@ -324,7 +324,7 @@ async function checkAllApis() {
 
 AppDataSource.initialize()
   .then(async () => {
-    cron.schedule("*/60 * * * * *", () => {
+    cron.schedule("*/5 * * * * *", () => {
       console.log("Verificando o status das APIs...");
       checkAllApis();
     });
