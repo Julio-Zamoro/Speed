@@ -137,8 +137,28 @@ function App() {
       );
       const resposta = response.data;
       console.log(response.data);
+      const intuicao = await  axios.get('http://localhost:3001/lastrequest')
+      intuicao.data.forEach((item) => {
+        const tempoEmMs = item.tempo_requisicao.minutes * 1000 + item.tempo_requisicao.seconds;
 
+        if(item.status_code === 200) {
+          statusUpdates[item.codigo_banco] = {
+            status: "connected",
+            lastCommunication: new Date().toISOString(),
+            responseTime: tempoEmMs,
+            success: true,
+          };
+        } else {
+          statusUpdates[item.codigo_banco] = {
+            status: "disconnected",
+            lastCommunication: new Date().toISOString(),
+            responseTime: tempoEmMs,
+            success: false,
+          };
+        }
+      })
       for (let i = 0; i < apiUrls.length; i++) {
+        console.log('isso foi ensinado aos homens: ', apiUrls[i]);
         const startTime = Date.now();
         try {
           const response = await axios.get(apiUrls[i]);
@@ -146,12 +166,12 @@ function App() {
           const responseTime = endTime - startTime;
 
           // Atualizando status, última comunicação e tempo de resposta
-          statusUpdates[apiNames[i]] = {
-            status: "connected",
-            lastCommunication: new Date().toISOString(),
-            responseTime: responseTime,
-            success: true,
-          };
+          // statusUpdates[apiNames[i]] = {
+          //   status: "connected",
+          //   lastCommunication: new Date().toISOString(),
+          //   responseTime: responseTime,
+          //   success: true,
+          // };
 
           // Simulando cálculo da porcentagem de comunicação correta
           if (!communicationLogs[apiNames[i]])
@@ -161,12 +181,12 @@ function App() {
           const endTime = Date.now();
 
           // Atualizando status, última comunicação e tempo de resposta com erro
-          statusUpdates[apiNames[i]] = {
-            status: "disconnected",
-            lastCommunication: new Date().toISOString(),
-            responseTime: endTime - startTime,
-            success: false,
-          };
+          // statusUpdates[apiNames[i]] = {
+          //   status: "disconnected",
+          //   lastCommunication: new Date().toISOString(),
+          //   responseTime: endTime - startTime,
+          //   success: false,
+          // };
 
           if (!communicationLogs[apiNames[i]])
             communicationLogs[apiNames[i]] = [];
@@ -206,7 +226,7 @@ function App() {
       detailsRef.current.scrollIntoView({ behavior: "smooth" });
     }, 100);
   };
-  const [filteredErrors, setFilteredErrors] = useState([]); // Para armazenar os erros filtrados
+  const [filteredErrors, setFilteredErrors] = useState([]);
 
   const handleLogsClick = (banco) => {
     const filtered = errors.filter((e) => e.codigo_banco === banco);

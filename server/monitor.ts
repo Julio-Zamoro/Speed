@@ -126,7 +126,6 @@ async function checkApiStatus(apiUrl) {
 
     console.error(`Falha ao conectar na API ${apiUrl}:`, errorMessage);
 
-    // Adicionando a URL na inserção do log de erro
     await pool.query(
       `INSERT INTO api_logs (
         tipo_registro, codigo_banco, status_code, data_requisicao, tempo_requisicao, 
@@ -147,144 +146,194 @@ async function checkApiStatus(apiUrl) {
         minuto,
       ]
     );
+
+
   }
 }
 
 async function checkAllApis() {
   const allCedentes = await cedenteRepository.find();
 
-  allCedentes.forEach(async (ele) => {
+  for (const ele of allCedentes) {
     const finded = await sequenceRepository.findOneBy({ id: 1 });
-
     const tempoInicio = Date.now();
-    if(ele.id > 6) {
-      data.TituloNossoNumero = finded.sequence.toString();
-    } else {
-      data.TituloNossoNumero = "";
-    }
     data.TituloNossoNumero = finded.sequence.toString();
+    if(ele.id > 6) {
+        data.TituloNossoNumero = "";
+    } else {
+        data.TituloNossoNumero = finded.sequence.toString();
+    }
     data.CedenteContaCodigoBanco = ele.codigo_banco;
     data.CedenteContaNumero = ele.conta_numero;
     data.CedenteContaNumeroDV = ele.conta_numero_dv;
     data.CedenteConvenioNumero = ele.convenio_numero;
 
-    console.log("por favor fale a verdade ao povo: ", ele.id_codigo_banco);
-    try {
-      var reposta = await axios.post(
-        `http://www.homologacao.plugboleto.com.br/api/v1/boletos`,
-        data,
-        {
-          headers,
-        }
-      );
+    let vendido;
+      try {
+          let resposta = await axios.post(
+              `http://www.homologacao.plugboleto.com.br/api/v1/boletos`,
+              data,
+              { headers }
+          );
+          vendido = resposta;
 
-      var mentir = Date.now() - tempoInicio;
+          const tempoRequisicao = Date.now() - tempoInicio;
 
-      await pool.query(
-        "INSERT INTO api_logs (tipo_registro, codigo_banco, status_code, data_requisicao, tempo_requisicao, resposta, url) VALUES ($1, $2, $3, $4, $5, $6, $7)",
-        [
-          "POST",
-          ele.id_codigo_banco,
-          reposta.status,
-          format(new Date(), "yyyy-MM-dd HH:mm:ss"),
-          mentir,
-          JSON.stringify(reposta.data),
-          `http://www.homologacao.plugboleto.com.br/api/v1/boletos`,
-        ]
-      );
-      
-    const waitedSequence = await sequenceRepository.save({
-      id: finded.id,
-      name: finded.name,
-      sequence: finded.sequence + 1,
-    });
-    } catch (error) {
+          const created_at = format(new Date(), "yyyy-MM-dd HH:mm:ss");
+          const now = new Date();
+          const ano = now.getFullYear();
+          const mes = now.getMonth() + 1;
+          const dia = now.getDate();
+          const hora = now.getHours();
+          const minuto = now.getMinutes();
 
-      console.log('o nosso inimigo?', ele.id_codigo_banco)
+          await pool.query(
+              `INSERT INTO api_logs (tipo_registro, codigo_banco, status_code, data_requisicao, tempo_requisicao,
+        resposta, url, ano, mes, dia, hora, minuto)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
+              [
+                  "POST",
+                  ele.id_codigo_banco,
+                  resposta.status,
+                  created_at,
+                  tempoRequisicao,
+                  JSON.stringify(resposta.data),
+                  `http://www.homologacao.plugboleto.com.br/api/v1/boletos`,
+                  ano,
+                  mes,
+                  dia,
+                  hora,
+                  minuto,
+              ]
+          );
 
-      const statusCode = error.response ? error.response.status : 500; // Usa o status da resposta se disponível, ou 500 em caso de falha de rede
-      const tempoRequisicao = Date.now() - tempoInicio;
-      // Mensagem de erro clara
-      let errorMessage = "Ocorreu um erro ao tentar acessar a API.";
-      if (error.response) {
-        switch (statusCode) {
-          case 404:
-            errorMessage =
-              "A URL solicitada não foi encontrada. Por favor, verifique se está correta.";
-            break;
-          case 500:
-            errorMessage =
-              "Houve um erro interno no servidor. Tente novamente mais tarde.";
-            break;
-          case 403:
-            errorMessage = "Acesso negado à API. Verifique suas credenciais.";
-            break;
-          default:
-            errorMessage = `Erro ao conectar à API: ${error.response.status} - ${error.response.statusText}`;
-        }
-      } else {
-        errorMessage = "Erro de conexão com a rede. Verifique sua internet.";
+          await sequenceRepository.save({
+              id: finded.id,
+              name: finded.name,
+              sequence: finded.sequence + 1,
+          });
+      } catch (error) {
+          const tempoRequisicao = Date.now() - tempoInicio;
+          let statusCode = 500;
+          let errorMessage = "Ocorreu um erro ao tentar acessar a API.";
+
+          if (error.response) {
+              console.log('por que ensinarei ', error.response);
+              statusCode = error.response.status;
+
+              switch (statusCode) {
+                  case 400:
+                      errorMessage = "Requisição inválida. Verifique os dados enviados.";
+                      break;
+                  case 401:
+                      errorMessage = "Acesso não autorizado. Verifique suas credenciais.";
+                      break;
+                  case 403:
+                      errorMessage = "Acesso negado à API. Verifique suas permissões.";
+                      break;
+                  case 422:
+                      errorMessage = "Entidade não processável. Verifique os dados enviados.";
+                      break;
+                  default:
+                      console.log('conferencia nominal> ', error.response);
+                      errorMessage = `Erro ao conectar à API: ${statusCode} - ${error.response.statusText}`;
+              }
+          } else if (error.code) {
+              switch (error.code) {
+                  case "ECONNRESET":
+                      errorMessage = "Conexão foi reiniciada. Tente novamente mais tarde.";
+                      break;
+                  case "EHOSTUNREACH":
+                      errorMessage = "Host inacessível. Verifique sua conexão.";
+                      break;
+                  default:
+                      errorMessage = `Erro desconhecido: ${error.code}`;
+              }
+          } else {
+              errorMessage = "Erro de conexão com a rede. Verifique sua internet.";
+          }
+
+          console.error(errorMessage);
+          const created_at = format(new Date(), "yyyy-MM-dd HH:mm:ss");
+          const now = new Date();
+          const ano = now.getFullYear();
+          const mes = now.getMonth() + 1;
+          const dia = now.getDate();
+          const hora = now.getHours();
+          const minuto = now.getMinutes();
+
+          await pool.query(
+              `INSERT INTO api_logs (tipo_registro, codigo_banco, status_code, data_requisicao, tempo_requisicao, resposta, url, ano, mes, dia, hora, minuto
+                ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
+              [
+                  "POST",
+                  ele.id_codigo_banco,
+                  statusCode,
+                  created_at,
+                  tempoRequisicao,
+                  JSON.stringify({ error: errorMessage }),
+                  `http://www.homologacao.plugboleto.com.br/api/v1/boletos`,
+                  ano,
+                  mes,
+                  dia,
+                  hora,
+                  minuto,
+              ]
+          );
       }
-  
-      // Adicionando a URL na inserção do log de erro
-      await pool.query(
-        "INSERT INTO api_logs (tipo_registro, codigo_banco, status_code, data_requisicao, tempo_requisicao, resposta, mensagem_erro, url) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
-        [
-          "POST",
-          ele.id_codigo_banco,
-          statusCode,
-          format(new Date(), "yyyy-MM-dd HH:mm:ss"),
-          tempoRequisicao,
-          JSON.stringify({ error: errorMessage }),
-          errorMessage,
-          `http://www.homologacao.plugboleto.com.br/api/v1/boletos`,
-        ]
-      );
 
-    }
-    if (reposta) {
+      if (vendido) {
       console.log('quem entrou foi: ', ele.id_codigo_banco)
       try {
 
 
         const consume = await axios.get(
-          `http://www.homologacao.plugboleto.com.br/api/v1/boletos?idIntegracao=${reposta.data._dados.idintegracao}`,
+          `http://www.homologacao.plugboleto.com.br/api/v1/boletos?idIntegracao=${vendido.data._dados.idintegracao}`,
           {
             headers,
           }
         );
-  
+
         const mentir = Date.now() - tempoInicio;
+          const created_at = format(new Date(), "yyyy-MM-dd HH:mm:ss");
+          const now = new Date();
+          const ano = now.getFullYear();
+          const mes = now.getMonth() + 1;
+          const dia = now.getDate();
+          const hora = now.getHours();
+          const minuto = now.getMinutes();
         await pool.query(
-          "INSERT INTO api_logs (tipo_registro, codigo_banco, status_code, data_requisicao, tempo_requisicao, resposta, url) VALUES ($1, $2, $3, $4, $5, $6, $7)",
+          `INSERT INTO api_logs (tipo_registro, codigo_banco, status_code, data_requisicao, tempo_requisicao, resposta, url, ano, mes, dia, hora, minuto
+                ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)`,
           [
             "GET",
             ele.id_codigo_banco,
             consume.status,
-            format(new Date(), "yyyy-MM-dd HH:mm:ss"),
+            created_at,
             mentir,
             JSON.stringify(consume.data),
-            `http://www.homologacao.plugboleto.com.br/api/v1/boletos?idIntegracao=${reposta.data._dados.idintegracao}`,
+            `http://www.homologacao.plugboleto.com.br/api/v1/boletos?idIntegracao=${vendido.data._dados.idintegracao}`,
+              ano,
+              mes,
+              dia,
+              hora,
+              minuto,
           ]
         );
-  
-  
+
       } catch (e) {
         console.log('deu ruim mas no get? ', e)
       }
     }
 
 
-  });
+  }
 
-  // for (const url of apiUrls) {
-  //   await checkApiStatus(url);
-  // }
 }
 
 AppDataSource.initialize()
   .then(async () => {
-    cron.schedule("*/5 * * * * *", () => {
+    cron.schedule("*/60 * * * * *", () => {
       console.log("Verificando o status das APIs...");
       checkAllApis();
     });

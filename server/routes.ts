@@ -61,7 +61,7 @@ routes.get('/logs', async (req, res) => {
 routes.get('/api/logs/rota/:apiUrl', async (req, res) => {
     const apiUrl = req.params.apiUrl; // Decodifica a URL recebida
     console.log(`Fetching logs for: ${apiUrl}`); // Log para depuração
-    
+
     const queryLogs = 'SELECT * FROM api_logs WHERE codigo_banco = $1 ORDER BY data_requisicao DESC';
     const queryStats = `
         SELECT
@@ -131,13 +131,26 @@ routes.get('/api/errors/count', async (req, res) => {
     `;
 
     try {
-        // Executa a consulta
         const { rows } = await pool.query(query);
 
-        // Retorna os resultados
         res.json(rows);
     } catch (err) {
         console.error('Database error:', err.message);
         res.status(500).json({ error: err.message });
     }
 });
+
+routes.get('/lastrequest', async (req, res) => {
+    const query =
+            `SELECT DISTINCT ON (al.codigo_banco) id,codigo_banco, status_code, tempo_requisicao
+            FROM api_logs al
+            ORDER BY al.codigo_banco, al.id DESC;`
+
+    try {
+        const { rows } = await pool.query(query);
+        res.json(rows);
+    } catch (err) {
+        console.error('Database error:', err.message);
+        res.status(500).json({ error: err.message });
+    }
+})
